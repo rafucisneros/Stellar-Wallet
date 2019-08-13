@@ -30,27 +30,20 @@ import { Server, Network } from 'stellar-sdk';
 class Account extends Component {
 
   componentDidMount(){
-    // Toggle the state every second
-    setInterval(() => (
-      this.setState(() => (
-        
-        server.accounts().accountId("GAL2KXOLC4ZW4HBHYHVKTQXYI6LNQZMH6I4MM7NGTVNQFU4P7ISC4WDF")
-        .call().then((data)=>{
-          this.state.account = data;
-          console.log("Then BUeno");
-          console.log(data);
-        }, (error)=>{
-          console.log("Then Error");
-          console.log(error);
-        }).catch((error)=>{
-          console.log("Catch");
-          console.log(error);
-        }).finally(()=>{
-          console.log("Finally");
-        })        
-        
-      ))
-    ), 1000);
+    server.accounts().accountId("GAL2KXOLC4ZW4HBHYHVKTQXYI6LNQZMH6I4MM7NGTVNQFU4P7ISC4WDF")
+    .call().then((data)=>{
+      this.setState({account: data}) ;
+      console.log("Then Bueno");
+      console.log(data);
+    }, (error)=>{
+      console.log("Then Error");
+      console.log(error);
+    }).catch((error)=>{
+      console.log("Catch");
+      console.log(error);
+    }).finally(()=>{
+      console.log("Finally");
+    }) ;  
   }
 
   //state object
@@ -62,7 +55,7 @@ class Account extends Component {
         <Text>{this.state.account.id}</Text>
       );
     }
-    return <Text>Nada que mostrar</Text>
+    return <Text>Cargando...</Text>
   }
 }
 
