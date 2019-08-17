@@ -19,48 +19,10 @@ import {
 
 import {
   Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
+  Colors
 } from 'react-native/Libraries/NewAppScreen';
 
-import { Server, Network } from 'stellar-sdk';
-
-class Account extends Component {
-
-  componentDidMount(){
-    server.accounts().accountId("GAL2KXOLC4ZW4HBHYHVKTQXYI6LNQZMH6I4MM7NGTVNQFU4P7ISC4WDF")
-    .call().then((data)=>{
-      this.setState({account: data}) ;
-      console.log("Then Bueno");
-      console.log(data);
-    }, (error)=>{
-      console.log("Then Error");
-      console.log(error);
-    }).catch((error)=>{
-      console.log("Catch");
-      console.log(error);
-    }).finally(()=>{
-      console.log("Finally");
-    }) ;  
-  }
-
-  //state object
-  state = { account: null };
-
-  render() {
-    if (this.state.account){
-      return (
-        <Text>{this.state.account.id}</Text>
-      );
-    }
-    return <Text>Cargando...</Text>
-  }
-}
-
-const server = new Server('https://horizon-testnet.stellar.org');
-Network.usePublicNetwork();
+import Account from './src/account.js'
 
 const styles = StyleSheet.create({
   scrollView: {
