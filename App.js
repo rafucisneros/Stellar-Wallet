@@ -23,6 +23,7 @@ import {
 
 import Account from './src/account.js'
 import Header from './src/header.js'
+import Transactions from "./src/transactions.js"
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -36,8 +37,8 @@ const styles = StyleSheet.create({
     }),
   },
   sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+    marginTop: 15,
+    paddingHorizontal: 10,
   }
 });
 
@@ -54,6 +55,7 @@ export default class App extends Component{
           <View style={styles.body}>
             <View style={styles.sectionContainer}>
               <Account />
+              <Transactions />
             </View>
           </View>
         </ScrollView>
