@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {
-  Text, View, StyleSheet, FlatList
+  Text, View, StyleSheet, FlatList,
+  ActivityIndicator
 } from 'react-native';
 import Stellar from './utils/Stellar';
-import Separators from './utils/Separators.js'
+import Separators from './utils/Separators';
+import Styles from './utils/Styles';
 
 class Transaction extends Component{
   constructor(props){
@@ -14,11 +16,11 @@ class Transaction extends Component{
     return (
       <View>
         <View>
-          <Text style={styles.title}>Memo Type:</Text>    
+          <Text style={Styles.styles.title}>Memo Type:</Text>    
           <Text>{this.props.transaction.item.memo_type}</Text>    
         </View>
         <View>
-          <Text style={styles.title}>Date:</Text>  
+          <Text style={Styles.styles.title}>Date:</Text>  
           <Text>{this.props.transaction.item.created_at}</Text>  
         </View>
       </View>
@@ -47,28 +49,30 @@ class Transactions extends Component{
   render(){
     if (this.state.transactions){
       return (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
+        <View style={Styles.styles.section}>
+          <Text style={Styles.styles.sectionTitle}>
             Transactions
           </Text>
           <FlatList 
               data = { this.state.transactions.records }
               renderItem = { this.renderTransaction }
               ItemSeparatorComponent = { Separators.verticalSeparator }
-              keyExtractor = {(item, index) => index}
+              keyExtractor = {(item, index) => index.toString()}
             />
         </View>
       )
     }
-    return <Text>Loading Transactions...</Text>
+    return (
+      <View>
+        <Text style={Styles.styles.loadingTitle}>Loading Transacions...</Text>
+        <ActivityIndicator size="large" color="#000" />
+      </View>
+    )
   }
   
 }
 
 const styles = StyleSheet.create({
-  separator:{
-    borderTopWidth: 1
-  },
   section:{
     backgroundColor: "#B2EBF2",
     paddingHorizontal: 3,
