@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {
   Text, View, StyleSheet, FlatList
-} from 'react-native'
-import { Server } from 'stellar-sdk';
-import VerticalSeparator from './verticalSeparator.js'
+} from 'react-native';
+import Stellar from './utils/Stellar';
+import Separators from './utils/Separators.js'
 
 class Transaction extends Component{
   constructor(props){
     super(props)
-    console.log(props)
+    // console.log(props)
   }  
   render(){
     return (
@@ -29,27 +29,13 @@ class Transaction extends Component{
 
 class Transactions extends Component{
   constructor(props){
-    super(props)
-    this.state = {transactions: false}
-    this.server = new Server('https://horizon-testnet.stellar.org');
-  }
-
-  separator = () => <VerticalSeparator />
-
-  async loadTransactionsForAccount(accoundId){
-    try{
-      const transactions = await this.server.transactions()
-        .forAccount(accoundId)
-        .call()
-      // console.log(transactions);
-      this.setState({transactions: transactions})
-    } catch {
-      console.log("An error ocurred trying to load transactions.");      
-    }
-  }
+    super(props);
+    this.state = {transactions: false};
+    this.accountID = "GAL2KXOLC4ZW4HBHYHVKTQXYI6LNQZMH6I4MM7NGTVNQFU4P7ISC4WDF";
+  }  
 
   componentDidMount(){
-    this.loadTransactionsForAccount("GAL2KXOLC4ZW4HBHYHVKTQXYI6LNQZMH6I4MM7NGTVNQFU4P7ISC4WDF");
+    Stellar.loadTransactionsForAccount(this.accountID, this);
   }
 
   renderTransaction = transaction => {
@@ -68,7 +54,8 @@ class Transactions extends Component{
           <FlatList 
               data = { this.state.transactions.records }
               renderItem = { this.renderTransaction }
-              ItemSeparatorComponent = { this.separator }
+              ItemSeparatorComponent = { Separators.verticalSeparator }
+              keyExtractor = {(item, index) => index}
             />
         </View>
       )

@@ -7,8 +7,8 @@ import {
     StyleSheet,
     FlatList
 } from 'react-native';
-import { Server } from 'stellar-sdk';
-import VerticalSeparator from './verticalSeparator.js';
+import Separators from './utils/Separators';
+import Stellar from './utils/Stellar';
 
 class Balance extends Component{
   constructor(props){
@@ -52,22 +52,10 @@ class Account extends Component {
   constructor(props){
     super(props);
     this.state = { account: false };
-    this.server = new Server('https://horizon-testnet.stellar.org');
-  }
-
-  async loadAccount(accoundId){
-    try{
-      const account = await this.server.accounts()
-        .accountId(accoundId).call();
-      console.log(account);
-      this.setState({account: account})
-    } catch {
-      console.log("An error ocurred trying to load account.");      
-    }
   }
 
   componentDidMount(){
-    this.loadAccount("GAL2KXOLC4ZW4HBHYHVKTQXYI6LNQZMH6I4MM7NGTVNQFU4P7ISC4WDF");
+    Stellar.loadAccount("GAL2KXOLC4ZW4HBHYHVKTQXYI6LNQZMH6I4MM7NGTVNQFU4P7ISC4WDF", this);
   }
 
   renderBalance = balance => {
@@ -75,8 +63,6 @@ class Account extends Component {
       <Balance balance={balance} />
     )
   }
-
-  separator = () => <VerticalSeparator />
 
   render() {
     if (this.state.account){
@@ -95,7 +81,8 @@ class Account extends Component {
             <FlatList 
               data = { this.state.account.balances }
               renderItem = { this.renderBalance }
-              ItemSeparatorComponent = { this.separator }
+              ItemSeparatorComponent = { Separators.verticalSeparator }
+              keyExtractor = {(item, index) => index}
             />
           </View>
         </View>

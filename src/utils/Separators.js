@@ -8,7 +8,7 @@ import {
 function VerticalSeparator(props) {
   return (
     <View style={[
-      styles.separator,
+      styles.verticalSeparator,
       {
         borderTopColor: (props.color) ? props.color : '#000'
       }
@@ -17,11 +17,16 @@ function VerticalSeparator(props) {
   )
 }
 
+class Separators{
+  verticalSeparator = () => <VerticalSeparator />
+}
+
+
 const styles = StyleSheet.create({
-  separator: {
+  verticalSeparator: {
     borderTopWidth: 1,
     margin: 2
   }
 })
 
-export default VerticalSeparator;
+export default Separators;
