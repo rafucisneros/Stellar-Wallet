@@ -18,7 +18,7 @@ function VerticalSeparator(props) {
 }
 
 class Separators{
-  verticalSeparator = () => <VerticalSeparator />
+  static verticalSeparator = () => <VerticalSeparator />
 }
 
 
