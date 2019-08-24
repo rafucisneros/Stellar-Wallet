@@ -1,13 +1,13 @@
 import React, {
-  Component, Fragment
+  Component
 } from 'react';
 import {
     Text, View, StyleSheet, FlatList, ActivityIndicator
 } from 'react-native';
-import Separators from './utils/Separators';
-import Stellar from './utils/Stellar';
-import Styles from './utils/Styles';
-import Container from './utils/Container';
+import Separators from '../utils/Separators';
+import Stellar from '../utils/Stellar';
+import Styles from '../utils/Styles';
+import Container from '../utils/Container';
 
 class Balance extends Component{
   constructor(props){

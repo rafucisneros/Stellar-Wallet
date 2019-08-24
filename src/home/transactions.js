@@ -1,17 +1,16 @@
 import React, {Component} from 'react';
 import {
-  Text, View, StyleSheet, FlatList,
+  Text, View, FlatList,
   ActivityIndicator, Button
 } from 'react-native';
-import Stellar from './utils/Stellar';
-import Separators from './utils/Separators';
-import Styles from './utils/Styles';
-import Container from './utils/Container';
+import Stellar from '../utils/Stellar';
+import Separators from '../utils/Separators';
+import Styles from '../utils/Styles';
+import Container from '../utils/Container';
 
 class Transaction extends Component{
   constructor(props){
     super(props)
-    // console.log(props)
   }  
   render(){
     return (
