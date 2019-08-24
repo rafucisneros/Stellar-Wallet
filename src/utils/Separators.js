@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  Text,
   StyleSheet
 } from 'react-native';
 
@@ -17,8 +16,22 @@ function VerticalSeparator(props) {
   )
 }
 
+function HorizontalSeparator(props) {
+  return (
+     <View
+      style={[
+        styles.horizontalSeparator,
+        {
+          borderColor: (props.color) ? props.color : '#000'
+        }      
+      ]}
+     />
+  )
+}
+
 class Separators{
   static verticalSeparator = () => <VerticalSeparator />
+  static horizontalSeparator = () => <HorizontalSeparator />
 }
 
 
@@ -26,6 +39,10 @@ const styles = StyleSheet.create({
   verticalSeparator: {
     borderTopWidth: 1,
     margin: 2
+  },
+  horizontalSeparator: {
+    flex: 1,
+    marginHorizontal: 5,
   }
 })
 

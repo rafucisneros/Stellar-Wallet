@@ -1,5 +1,5 @@
 import React, {
-  Component
+  Component, Fragment
 } from 'react';
 import {
     Text, View, StyleSheet, FlatList, ActivityIndicator
@@ -7,6 +7,7 @@ import {
 import Separators from './utils/Separators';
 import Stellar from './utils/Stellar';
 import Styles from './utils/Styles';
+import Container from './utils/Container';
 
 class Balance extends Component{
   constructor(props){
@@ -52,7 +53,7 @@ class Account extends Component {
   render() {
     if (this.state.account){
       return (
-        <View>
+        <Container>
           <View style={Styles.styles.section}>
             <Text style={Styles.styles.sectionTitle}>
               Account ID
@@ -70,14 +71,14 @@ class Account extends Component {
               keyExtractor = {(item, index) => index.toString()}
             />
           </View>
-        </View>
+        </Container>
       );
     }
     return (
-      <View>
+      <Container>
         <Text style={{alignSelf: "center"}}>Loading Account...</Text>
         <ActivityIndicator size="large" color="#000" />
-      </View>
+      </Container>
     )
   }
 }

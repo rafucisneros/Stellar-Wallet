@@ -4,11 +4,12 @@ import React, {Component} from 'react';
   View,
   StyleSheet
 } from 'react-native';
+import Styles from './utils/Styles';
 
 class Header extends Component{
   render(){
     return (
-      <View style={styles.header}>
+      <View style={Styles.styles.header}>
         <Text>
           Stellar Wallet
         </Text>
@@ -22,8 +23,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingVertical: 5,
     backgroundColor: "#0097A7",
-    color: "#FF000F",
-    marginBottom: 5
+    color: "#FF000F"
   }
 })
 

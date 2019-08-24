@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {
   Text, View, StyleSheet, FlatList,
-  ActivityIndicator
+  ActivityIndicator, Button
 } from 'react-native';
 import Stellar from './utils/Stellar';
 import Separators from './utils/Separators';
 import Styles from './utils/Styles';
+import Container from './utils/Container';
 
 class Transaction extends Component{
   constructor(props){
@@ -46,47 +47,41 @@ class Transactions extends Component{
     )
   }
 
+  handlePress = () => {
+    console.log(this.props.navigation);
+    this.props.navigation.navigate('Account')
+  }
+
   render(){
     if (this.state.transactions){
       return (
-        <View style={Styles.styles.section}>
-          <Text style={Styles.styles.sectionTitle}>
-            Transactions
-          </Text>
-          <FlatList 
+        <Container style={Styles.styles.section}>
+          <Button
+            title="hola"
+            onPress={this.handlePress}
+          />
+          <View style={Styles.styles.section}>
+            <Text style={Styles.styles.sectionTitle}>
+              Transactions
+            </Text>
+            <FlatList 
               data = { this.state.transactions.records }
               renderItem = { this.renderTransaction }
               ItemSeparatorComponent = { Separators.verticalSeparator }
               keyExtractor = {(item, index) => index.toString()}
             />
-        </View>
+          </View>
+        </Container>
       )
     }
     return (
-      <View>
+      <Container>
         <Text style={Styles.styles.loadingTitle}>Loading Transacions...</Text>
         <ActivityIndicator size="large" color="#000" />
-      </View>
+      </Container>
     )
   }
   
 }
-
-const styles = StyleSheet.create({
-  section:{
-    backgroundColor: "#B2EBF2",
-    paddingHorizontal: 3,
-    paddingVertical: 3,
-    margin: 3
-  },
-  title:{
-    fontWeight: "bold",
-    fontSize: 15
-  },
-  sectionTitle:{
-    fontWeight: "bold",
-    fontSize: 18   
-  }
-});
 
 export default Transactions;
