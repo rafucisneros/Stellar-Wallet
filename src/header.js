@@ -1,30 +1,24 @@
 import React, {Component} from 'react';
-  import{
-  Text,
-  View,
-  StyleSheet
-} from 'react-native';
-import Styles from './utils/Styles';
+import { Toolbar } from 'react-native-material-ui';
 
 class Header extends Component{
-  render(){
+
+  render() {
     return (
-      <View style={Styles.styles.header}>
-        <Text>
-          Stellar Wallet
-        </Text>
-      </View>
+      <Toolbar
+        leftElement="menu"
+        centerElement="Stellar"
+        rightElement={{
+            menu: {
+                icon: "more-vert",
+                labels: ["item 1", "item 2"]
+            }
+        }}
+        onRightElementPress={ (label) => { console.log(label) }}
+      />
     )
   }
-}
 
-const styles = StyleSheet.create({
-  header:{
-    paddingHorizontal: 5,
-    paddingVertical: 5,
-    backgroundColor: "#0097A7",
-    color: "#FF000F"
-  }
-})
+}
 
 export default Header;
