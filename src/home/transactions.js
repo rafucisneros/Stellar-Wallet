@@ -5,8 +5,11 @@ import {
 } from 'react-native';
 import Stellar from '../utils/Stellar';
 import Separators from '../utils/Separators';
-import Styles from '../utils/Styles';
+import styles from '../utils/Styles';
 import Container from '../utils/Container';
+
+import store from '../redux/store';
+import { connect } from 'react-redux';
 
 class Transaction extends Component{
   constructor(props){
@@ -16,11 +19,11 @@ class Transaction extends Component{
     return (
       <View>
         <View>
-          <Text style={Styles.styles.title}>Memo Type:</Text>    
+          <Text style={styles.title}>Memo Type:</Text>    
           <Text>{this.props.transaction.item.memo_type}</Text>    
         </View>
         <View>
-          <Text style={Styles.styles.title}>Date:</Text>  
+          <Text style={styles.title}>Date:</Text>  
           <Text>{this.props.transaction.item.created_at}</Text>  
         </View>
       </View>
@@ -32,12 +35,15 @@ class Transaction extends Component{
 class Transactions extends Component{
   constructor(props){
     super(props);
-    this.state = {transactions: false};
-    this.accountID = "GAL2KXOLC4ZW4HBHYHVKTQXYI6LNQZMH6I4MM7NGTVNQFU4P7ISC4WDF";
   }  
-
-  componentDidMount(){
-    Stellar.loadTransactionsForAccount(this.accountID, this);
+  async componentDidMount(){
+    transactions = await Stellar.loadTransactionsForAccount(this.props.accountId);
+    store.dispatch({
+      type: "LOAD_TRANSACTIONS",
+      payload: {
+        transactions
+      }
+    })
   }
 
   renderTransaction = transaction => {
@@ -52,19 +58,19 @@ class Transactions extends Component{
   }
 
   render(){
-    if (this.state.transactions){
+    if (this.props.transactions){
       return (
-        <Container style={Styles.styles.section}>
+        <Container style={styles.section}>
           <Button
             title="hola"
             onPress={this.handlePress}
           />
-          <View style={Styles.styles.section}>
-            <Text style={Styles.styles.sectionTitle}>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
               Transactions
             </Text>
             <FlatList 
-              data = { this.state.transactions.records }
+              data = { this.props.transactions.records }
               renderItem = { this.renderTransaction }
               ItemSeparatorComponent = { Separators.verticalSeparator }
               keyExtractor = {(item, index) => index.toString()}
@@ -75,7 +81,7 @@ class Transactions extends Component{
     }
     return (
       <Container>
-        <Text style={Styles.styles.loadingTitle}>Loading Transacions...</Text>
+        <Text style={styles.loadingTitle}>Loading Transacions...</Text>
         <ActivityIndicator size="large" color="#000" />
       </Container>
     )
@@ -83,4 +89,10 @@ class Transactions extends Component{
   
 }
 
-export default Transactions;
+function mapStateToProps(state){
+  return {
+    transactions: state.transactions,
+    accountId: state.accountId
+  }
+}
+export default connect(mapStateToProps)(Transactions);

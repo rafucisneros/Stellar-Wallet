@@ -3,16 +3,16 @@ import {
   ScrollView,
   View,
 } from 'react-native';
-import Styles from "./Styles";
+import styles from "./Styles";
 
 function Container(props){
   return (
     <Fragment>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={Styles.styles.scrollView}>
-        <View style={Styles.styles.body}>
-          <View style={Styles.styles.sectionContainer}>
+        style={styles.scrollView}>
+        <View style={styles.body}>
+          <View style={styles.sectionContainer}>
             {props.children}
           </View>
         </View>

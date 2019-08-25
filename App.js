@@ -6,6 +6,9 @@ import {
 import Home from './src/home/home';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import { Provider } from 'react-redux';
+import store from './src/redux/store';
+
 const CustomDrawerContentComponent = props => {
   return (
     <ScrollView>
@@ -54,6 +57,12 @@ const AppContainer = createAppContainer(DrawerNavigator);
 
 export default class App extends Component {
   render() {
-    return <AppContainer />
+    return (
+      <Provider
+        store={store}
+      >
+        <AppContainer />
+      </Provider>
+    )
   }
 }
