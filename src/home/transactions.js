@@ -8,7 +8,7 @@ import Separators from '../utils/Separators';
 import styles from '../utils/Styles';
 import Container from '../utils/Container';
 
-import store from '../redux/store';
+import { store } from '../redux/store';
 import { connect } from 'react-redux';
 
 class Transaction extends Component{

@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet
-} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 function VerticalSeparator(props) {
   return (
@@ -33,7 +30,6 @@ class Separators{
   static verticalSeparator = () => <VerticalSeparator />
   static horizontalSeparator = () => <HorizontalSeparator />
 }
-
 
 const styles = StyleSheet.create({
   verticalSeparator: {

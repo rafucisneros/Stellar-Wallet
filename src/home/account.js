@@ -1,8 +1,6 @@
-import React, {
-  Component
-} from 'react';
+import React, { Component } from 'react';
 import {
-    Text, View, StyleSheet, FlatList, ActivityIndicator
+    Text, View, FlatList, ActivityIndicator
 } from 'react-native';
 import Separators from '../utils/Separators';
 import Stellar from '../utils/Stellar';
@@ -10,7 +8,7 @@ import styles from '../utils/Styles';
 import Container from '../utils/Container';
 
 import { connect } from 'react-redux';
-import store from '../redux/store';
+import { store } from '../redux/store';
 
 class Balance extends Component{
   constructor(props){

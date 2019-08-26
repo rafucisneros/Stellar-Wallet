@@ -1,8 +1,5 @@
 import React, {Fragment} from "react";
-import {
-  ScrollView,
-  View,
-} from 'react-native';
+import { ScrollView, View } from 'react-native';
 import styles from "./Styles";
 
 function Container(props){
@@ -20,5 +17,4 @@ function Container(props){
     </Fragment>
   );
 }
-
 export default Container;

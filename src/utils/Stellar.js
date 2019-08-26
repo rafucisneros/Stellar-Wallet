@@ -18,8 +18,7 @@ class Stellar{
   static async loadTransactionsForAccount(accoundId){
     try{
       const transactions = await this.server.transactions()
-        .forAccount(accoundId)
-        .call();
+        .forAccount(accoundId).call();
       // console.log(transactions);
       return transactions;
     } catch (e) {
@@ -27,7 +26,5 @@ class Stellar{
       console.log(e);     
     }
   }
-
 }
-
 export default Stellar;

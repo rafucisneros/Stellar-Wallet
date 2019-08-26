@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import { 
   createAppContainer, createDrawerNavigator,
-  DrawerItems, SafeAreaView, Text, ScrollView 
+  DrawerItems, SafeAreaView, Text, ScrollView, ActivityIndicator 
 } from "react-navigation";
 import Home from './src/home/home';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { Provider } from 'react-redux';
-import store from './src/redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './src/redux/store';
 
 const CustomDrawerContentComponent = props => {
   return (
@@ -54,14 +55,18 @@ const DrawerNavigator = createDrawerNavigator(
   }
 );
 const AppContainer = createAppContainer(DrawerNavigator);
-
 export default class App extends Component {
   render() {
     return (
       <Provider
         store={store}
       >
-        <AppContainer />
+        <PersistGate
+          // loading={<ActivityIndicator size="large" color="#000" />}
+          persistor={persistor}
+        >
+          <AppContainer />
+        </PersistGate>
       </Provider>
     )
   }
