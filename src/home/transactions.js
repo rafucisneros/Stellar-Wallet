@@ -61,10 +61,6 @@ class Transactions extends Component{
     if (this.props.transactions){
       return (
         <Container style={styles.section}>
-          <Button
-            title="hola"
-            onPress={this.handlePress}
-          />
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
               Transactions

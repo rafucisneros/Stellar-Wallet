@@ -9,6 +9,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#0097A7",
     color: "#FF000F"
   },
+  stellarTitle: {
+    color: "#fff",
+    marginHorizontal:30,
+    fontSize: 23
+  },
   // Cargando datos
   loadingTitle:{
     alignSelf: "center"

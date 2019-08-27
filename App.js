@@ -3,7 +3,14 @@ import {
   createAppContainer, createDrawerNavigator,
   DrawerItems, SafeAreaView, Text, ScrollView, ActivityIndicator 
 } from "react-navigation";
+
 import Home from './src/home/home';
+import SetInflation from './src/setInflation/setInflation';
+import RemoveAccount from './src/removeAccount/removeAccount';
+import Trustlines from './src/trustlines/trustlines';
+import AddFriends from './src/addFriends/addFriends';
+import LoadingState from './src/utils/LoadingState';
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { Provider } from 'react-redux';
@@ -32,12 +39,42 @@ const DrawerNavigator = createDrawerNavigator(
     )
       }
     },
-    Friends: {
-      screen: Home,
+    AddFriends: {
+      screen: AddFriends,
       navigationOptions: {
         title: "Add Friends",
         drawerIcon: ({ tintColor }) => (  
               <Icon style={[{color: tintColor}]} size={25} name={'person-add'}/>
+        )
+        // <Icon style={[{color: "#fff"}]} size={25} name={'person-add'}/>
+      }
+    },
+    SetInflation: {
+      screen: SetInflation,
+      navigationOptions: {
+        title: "Set Inflation",
+        drawerIcon: ({ tintColor }) => (  
+              <Icon style={[{color: tintColor}]} size={25} name={'trending-up'}/>
+        )
+        // <Icon style={[{color: "#fff"}]} size={25} name={'person-add'}/>
+      }
+    },
+    Trustlines: {
+      screen: Trustlines,
+      navigationOptions: {
+        title: "Trustlines",
+        drawerIcon: ({ tintColor }) => (  
+              <Icon style={[{color: tintColor}]} size={25} name={'check'}/>
+        )
+        // <Icon style={[{color: "#fff"}]} size={25} name={'person-add'}/>
+      }
+    },
+    RemoveAccount: {
+      screen: RemoveAccount,
+      navigationOptions: {
+        title: "Remove Account",
+        drawerIcon: ({ tintColor }) => (  
+              <Icon style={[{color: tintColor}]} size={25} name={'clear'}/>
         )
         // <Icon style={[{color: "#fff"}]} size={25} name={'person-add'}/>
       }
@@ -62,7 +99,7 @@ export default class App extends Component {
         store={store}
       >
         <PersistGate
-          // loading={<ActivityIndicator size="large" color="#000" />}
+          loading={<LoadingState />}
           persistor={persistor}
         >
           <AppContainer />

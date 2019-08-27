@@ -5,6 +5,9 @@ import { Toolbar } from 'react-native-material-ui';
 
 import Account from './account';
 import Transactions from './transactions';
+import ID from './id';
+import SendPayment from './sendPayment';
+import MenuTop from '../utils/MenuTop';
 
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";;
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -31,7 +34,7 @@ const tabNavigator = createMaterialBottomTabNavigator(
         ),  
       }  
     },
-    sendTransaction: { screen: Transactions,  
+    sendTransaction: { screen: SendPayment,  
       navigationOptions:{  
         tabBarLabel:'Send',  
         tabBarIcon: ({ tintColor }) => (  
@@ -41,7 +44,7 @@ const tabNavigator = createMaterialBottomTabNavigator(
         ),  
       }  
     },
-    id: { screen: Transactions,  
+    id: { screen: ID,  
       navigationOptions:{  
         tabBarLabel:'ID',  
         tabBarIcon: ({ tintColor }) => (  
@@ -61,25 +64,10 @@ const tabNavigator = createMaterialBottomTabNavigator(
 const AppContainer = createAppContainer(tabNavigator);
 
 class Home extends Component {
-  openMenu = () => { 
-    this.props.navigation.openDrawer(); 
-  }
-
   render() {
     return (
       <Fragment>
-        <Toolbar
-          leftElement="menu"
-          centerElement="Stellar"
-          rightElement={{
-              menu: {
-                  icon: "more-vert",
-                  labels: ["Set Inflation", "Trustlines", "Remove Account"]
-              }
-          }}
-          onRightElementPress={ (label) => { console.log(label) }}
-          onLeftElementPress={this.openMenu}
-        />
+        <MenuTop navigation={this.props.navigation}/>
         <AppContainer />
       </Fragment>
     );
