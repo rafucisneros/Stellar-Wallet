@@ -1,19 +1,19 @@
 import React, { Fragment, Component }  from 'react';
 import { Text, View } from 'react-native';
+
 import MenuTop from '../utils/MenuTop';
 import Container from '../utils/Container'
 
 import { connect } from 'react-redux';
-import { store } from '../redux/store';
 
-class AddFriends extends Component{
+class Contacts extends Component{
   render(){
     return (
       <Fragment>
         <MenuTop navigation={this.props.navigation}/>
         <Container>
           <View>
-            <Text>Add Friends</Text>
+            <Text>Contacts</Text>
           </View>
         </Container>
       </Fragment>
@@ -27,4 +27,4 @@ function mapStateToProps(state){
     accountId: state.accountId
   };
 }
-export default connect(mapStateToProps)(AddFriends);
+export default connect(mapStateToProps)(Contacts);
