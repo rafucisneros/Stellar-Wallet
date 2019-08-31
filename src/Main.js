@@ -1,7 +1,7 @@
 import React from 'react';
-import { 
-  createAppContainer, createDrawerNavigator
-} from "react-navigation";
+import { createAppContainer } from "react-navigation";
+import { createDrawerNavigator } from "react-navigation-drawer";
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Home from './home/home';

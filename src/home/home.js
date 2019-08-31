@@ -1,7 +1,6 @@
 import React, {Fragment, Component} from 'react';
 import { createAppContainer } from "react-navigation";
 import { View } from 'react-native';
-import { Toolbar } from 'react-native-material-ui';
 
 import Account from './account';
 import Transactions from './transactions';
