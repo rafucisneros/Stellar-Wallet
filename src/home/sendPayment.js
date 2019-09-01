@@ -1,5 +1,5 @@
 import React, { Fragment, Component }  from 'react';
-import { Text, View } from 'react-native';
+import { Text, TextInput } from 'react-native';
 import Container from '../utils/Container'
 
 import { connect } from 'react-redux';
@@ -9,7 +9,7 @@ class SendPayment extends Component{
   render(){
     return (
       <Container>
-        <Text style={{alignSelf: "center"}}>Send Payment</Text>
+        <Text style={{alignSelf: "center"}}>Recipient Address</Text>
       </Container>
     )
   }

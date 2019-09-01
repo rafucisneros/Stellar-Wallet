@@ -31,6 +31,7 @@
     "react-redux": "^7.1.0",
     "readable-stream": "1.0.33",
     "redux": "^4.0.4",
+    "redux-form": "^8.2.6",
     "redux-persist": "^5.10.0",
     "stellar-sdk": "^2.2.3",
     "stream-browserify": "1.0.0",
