@@ -53,7 +53,6 @@ class Transactions extends Component{
   }
 
   handlePress = () => {
-    console.log(this.props.navigation);
     this.props.navigation.navigate('Account')
   }
 
@@ -87,8 +86,8 @@ class Transactions extends Component{
 
 function mapStateToProps(state){
   return {
-    transactions: state.transactions,
-    accountId: state.accountId
+    transactions: state.accountReducer.transactions,
+    accountId: state.accountReducer.accountId
   }
 }
 export default connect(mapStateToProps)(Transactions);

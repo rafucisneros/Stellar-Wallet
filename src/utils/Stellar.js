@@ -3,11 +3,10 @@ import {Server} from 'stellar-sdk';
 class Stellar{
   static server = new Server('https://horizon-testnet.stellar.org');
 
-  static async loadAccount(accoundId){
+  static async loadAccount(accountId){
     try{
       const account = await this.server.accounts()
-        .accountId(accoundId).call();
-      // console.log(account);
+        .accountId(accountId).call();
       return account;
     } catch (e) {
       console.log("An error ocurred trying to load account.");
@@ -15,11 +14,10 @@ class Stellar{
     }
   }
 
-  static async loadTransactionsForAccount(accoundId){
+  static async loadTransactionsForAccount(accountId){
     try{
       const transactions = await this.server.transactions()
-        .forAccount(accoundId).call();
-      // console.log(transactions);
+        .forAccount(accountId).call();
       return transactions;
     } catch (e) {
       console.log("An error ocurred trying to load transactions."); 

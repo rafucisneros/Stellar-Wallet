@@ -6,8 +6,7 @@ const styles = StyleSheet.create({
   header:{
     paddingHorizontal: 5,
     paddingVertical: 5,
-    backgroundColor: "#0097A7",
-    color: "#FF000F"
+    backgroundColor: "#0097A7"
   },
   stellarTitle: {
     color: "#fff",
@@ -47,6 +46,16 @@ const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 15,
     paddingHorizontal: 10,
+  },
+  copied:{
+    padding: 10,
+    backgroundColor: "#0097A7",
+    color: "#fff",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    textAlign: "center"
   }
 })
 export default styles;

@@ -1,11 +1,8 @@
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'
-// import { reducer } from './reducer'
+import storage from 'redux-persist/lib/storage';
 
 function accountReducer(state = {}, action){
-  console.log(state)
-  console.log(action)
   switch (action.type){
     case ("LOAD_ACCOUNT"): {
       return {... state, ...action.payload};
@@ -23,12 +20,16 @@ const persistCongif = {
   storage
 };
 
-const persistedReducer = persistReducer(persistCongif, accountReducer);
+const reducer = combineReducers({
+  accountReducer
+})
+
+const persistedReducer = persistReducer(persistCongif, reducer);
 
 const store = 
   createStore(persistedReducer,
-    {accountId: "GAL2KXOLC4ZW4HBHYHVKTQXYI6LNQZMH6I4MM7NGTVNQFU4P7ISC4WDF"}
+    {accountReducer: {accountId: "GAL2KXOLC4ZW4HBHYHVKTQXYI6LNQZMH6I4MM7NGTVNQFU4P7ISC4WDF"}}
   );
-const persistor = persistStore(store);
+  const persistor = persistStore(store);
 
 export { store, persistor };

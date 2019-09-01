@@ -13,7 +13,6 @@ import { store } from '../redux/store';
 class Balance extends Component{
   constructor(props){
     super(props)
-    console.log(props)
   }  
   render(){
     return (
@@ -87,8 +86,8 @@ class Account extends Component {
 
 function mapStateToProps(state){
   return {
-    account: state.account,
-    accountId: state.accountId
+    account: state.accountReducer.account,
+    accountId: state.accountReducer.accountId
   };
 }
 export default connect(mapStateToProps)(Account);
