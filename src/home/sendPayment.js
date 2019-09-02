@@ -1,68 +1,124 @@
 import React, { Component }  from 'react';
-import { Text, View, StyleSheet, TextInput, Alert } from 'react-native';
+import { Text, View, StyleSheet, TextInput, 
+  Picker 
+} from 'react-native';
 import Container from '../utils/Container'
 
 import { connect } from 'react-redux';
 
 import { Button } from 'react-native-paper';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 class Form extends React.Component {
+  constructor(props){
+    super(props);
+    currency = "native";
+    balance = this.props.account.balances.filter(
+      ({balance, asset_type})=> asset_type == "native"
+    )[0].balance;
+    this.state = {currency, balance};
+  }
   emailInput = null;
   render() {
+    console.log(this.state)
+    console.log(this.props)
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Formik x React Native</Text>
         <Formik
-          initialValues={{ name: '', email: '' }}
+          initialValues={{ 
+            recipient: '', amount: '',
+            currency: 'native', memo: ''
+          }}
           validationSchema={Yup.object({
-            name: Yup.string()              
+            recipient: Yup.string()
+              .length(56, "Stellar addresses must have exactly 56 characters.")              
               .required('Required'),
-            email: Yup.string()
-              .email('Invalid Email')
-              .required('Required'),
+            amount: Yup.number()
+              .required('Required')
+              .max(this.state.balance),
+            currency: Yup.string()
+              .required("Required"),
+            memo: Yup.string()
+              .max(28, "Memos can only have 28 characters (Special characters like \"ñ\" may count as 2).")
           })}
           onSubmit={(values, formikActions) => {
+            console.log(values)
+            console.log(formikActions)
             setTimeout(() => {
-              Alert.alert(JSON.stringify(values));
-              // Important: Make sure to setSubmitting to false so our loading indicator
-              // goes away.
               formikActions.setSubmitting(false);
             }, 500);
           }}>
           {props => (
             <View>
+             <Text>Recipient Address</Text>
              <TextInput
-                onChangeText={props.handleChange('name')}
-                onBlur={props.handleBlur('name')}
-                value={props.values.name}
+                onChangeText={props.handleChange('recipient')}
+                onBlur={props.handleBlur('recipient')}
+                value={props.values.recipient}
                 autoFocus
-                placeholder="Your Name"
+                placeholder="Recipient Address"
                 style={styles.input}
                 onSubmitEditing={() => {
-                  // on certain forms, it is nice to move the user's focus
-                  // to the next input when they press enter.
-                  this.emailInput.focus()
+                  this.currencyInput.focus()
                 }}
               />
-              {props.touched.name && props.errors.name ? (
-                <Text style={styles.error}>{props.errors.name}</Text>
+              {props.touched.recipient && props.errors.recipient ? (
+                <Text style={styles.error}>{props.errors.recipient}</Text>
               ) : null}
+              <View style={[{flexDirection: "row", justifyContent: "space-between"}]}>
+                <View style={[{width: "20%"}]}>
+                  <Text>Currency</Text>
+                  <Picker
+                    selectedValue={this.state.currency}
+                    style={{height: 50}}
+                    onValueChange={(itemValue, itemIndex) => {
+                      props.setFieldValue('currency', itemValue);
+                      balance = this.props.account.balances.filter(
+                        ({balance, asset_type})=> asset_type == itemValue
+                      )[0].balance;
+                      this.setState({currency: itemValue, balance})
+                    }
+                    }>
+                    <Picker.Item label="XLM" value="native" />
+                  </Picker>
+                </View>  
+                <View style={{width: "60%"}}>
+                  <Text>Amount</Text>
+                  <TextInput
+                    onChangeText={props.handleChange('amount')}
+                    onBlur={props.handleBlur('amount')}
+                    value={props.values.amount}
+                    placeholder="0.00000"
+                    style={styles.input}
+                    ref={el => this.amountInput = el}
+                    onSubmitEditing={() => {
+                      this.memoInput.focus()
+                    }}
+                  />
+                  {props.touched.amount && props.errors.amount ? (
+                    <Text style={styles.error}>{props.errors.amount}</Text>
+                  ) : null}
+                  <Text>
+                    Available Amount: {this.state.balance} {this.state.currency == "native" ? "XML" : this.state.currency}
+                  </Text>
+                </View>              
+              </View>
+              <Text>Memo (optional)</Text>
               <TextInput
-                onChangeText={props.handleChange('email')}
-                onBlur={props.handleBlur('email')}
-                value={props.values.email}
-                placeholder="Email Address"
+                onChangeText={props.handleChange('memo')}
+                onBlur={props.handleBlur('memo')}
+                value={props.values.memo}
+                placeholder="memo"
                 style={styles.input}
-                ref={el => this.emailInput = el}
+                ref={el => this.memoInput = el}
               />
-              {props.touched.email && props.errors.email ? (
-                <Text style={styles.error}>{props.errors.email}</Text>
+              {props.touched.memo && props.errors.memo ? (
+                <Text style={styles.error}>{props.errors.memo}</Text>
               ) : null}
               <Button
                 onPress={props.handleSubmit}
-                color="black"
+                color="#0097A7"
                 mode="contained"
                 loading={props.isSubmitting}
                 disabled={props.isSubmitting}
@@ -117,8 +173,7 @@ class SendPayment extends Component{
   render(){
     return (
       <Container>
-        <Text style={{alignSelf: "center"}}>Recipient Address</Text>
-        <Form />
+        <Form account={this.props.account}/>
       </Container>
     )
   }
