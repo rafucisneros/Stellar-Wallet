@@ -18,11 +18,11 @@ class Form extends React.Component {
       ({balance, asset_type})=> asset_type == "native"
     )[0].balance;
     this.state = {currency, balance};
+    console.log(this.props.account.balances)
   }
   emailInput = null;
   render() {
-    console.log(this.state)
-    console.log(this.props)
+    var options =["Home","Savings","Car","GirlFriend"]
     return (
       <View style={styles.container}>
         <Formik
@@ -67,20 +67,30 @@ class Form extends React.Component {
                 <Text style={styles.error}>{props.errors.recipient}</Text>
               ) : null}
               <View style={[{flexDirection: "row", justifyContent: "space-between"}]}>
-                <View style={[{width: "20%"}]}>
+                <View style={[{width: "40%"}]}>
                   <Text>Currency</Text>
                   <Picker
                     selectedValue={this.state.currency}
                     style={{height: 50}}
                     onValueChange={(itemValue, itemIndex) => {
                       props.setFieldValue('currency', itemValue);
-                      balance = this.props.account.balances.filter(
-                        ({balance, asset_type})=> asset_type == itemValue
-                      )[0].balance;
+                      if (itemValue === "native") { 
+                        balance = this.props.account.balances.filter(
+                          ({asset_type}) => asset_type == itemValue
+                          )[0].balance 
+                      } else { 
+                        balance = this.props.account.balances.filter(
+                          ({asset_code}) => asset_code == itemValue
+                          )[0].balance
+                      }
                       this.setState({currency: itemValue, balance})
                     }
                     }>
-                    <Picker.Item label="XLM" value="native" />
+                    {this.props.account.balances.map((balance, index)=>( balance.asset_type === "native" ?
+                      <Picker.Item label="XLM" value={balance.asset_type} key={index} />
+                      : <Picker.Item label={balance.asset_code} value={balance.asset_code} key={index} />
+                    ))}
+                    {/* <Picker.Item label="XLM" value="native" /> */}
                   </Picker>
                 </View>  
                 <View style={{width: "60%"}}>
