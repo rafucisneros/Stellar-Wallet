@@ -33,7 +33,7 @@ const tabNavigator = createMaterialBottomTabNavigator(
         ),  
       }  
     },
-    sendTransaction: { screen: SendPayment,  
+    SendPayment: { screen: SendPayment,  
       navigationOptions:{  
         tabBarLabel:'Send',  
         tabBarIcon: ({ tintColor }) => (  
@@ -43,7 +43,7 @@ const tabNavigator = createMaterialBottomTabNavigator(
         ),  
       }  
     },
-    id: { screen: ID,  
+    Id: { screen: ID,  
       navigationOptions:{  
         tabBarLabel:'ID',  
         tabBarIcon: ({ tintColor }) => (  
@@ -54,7 +54,7 @@ const tabNavigator = createMaterialBottomTabNavigator(
       }  
     }
   }, {
-    initialRouteName: 'sendTransaction',
+    initialRouteName: 'SendPayment',
     activeColor: '#f0edf6',
     inactiveColor: '#3e2465',
     barStyle: { backgroundColor: '#0097A7' },

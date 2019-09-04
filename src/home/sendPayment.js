@@ -1,7 +1,8 @@
 import React, { Component }  from 'react';
 import { Text, View, StyleSheet, TextInput, 
-  Picker 
+  Picker, TouchableOpacity 
 } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 import Container from '../utils/Container'
 
 import { connect } from 'react-redux';
@@ -10,19 +11,28 @@ import { Button } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
+import NavigationService from '../utils/NavigationService';
+
+const navigateAction = NavigationActions.navigate({
+  routeName: 'StackNavigator',
+
+  params: {},
+
+  action: NavigationActions.navigate({ routeName: 'ConfirmPayment' }),
+});
+
 class Form extends React.Component {
   constructor(props){
     super(props);
     currency = "native";
     balance = this.props.account.balances.filter(
-      ({balance, asset_type})=> asset_type == "native"
+      ({asset_type})=> asset_type == "native"
     )[0].balance;
     this.state = {currency, balance};
-    console.log(this.props.account.balances)
   }
   emailInput = null;
   render() {
-    var options =["Home","Savings","Car","GirlFriend"]
+    console.log(this.props.navigation)
     return (
       <View style={styles.container}>
         <Formik
@@ -43,11 +53,14 @@ class Form extends React.Component {
               .max(28, "Memos can only have 28 characters (Special characters like \"ñ\" may count as 2).")
           })}
           onSubmit={(values, formikActions) => {
-            console.log(values)
-            console.log(formikActions)
+            console.log(values);
+            console.log(formikActions);
             setTimeout(() => {
               formikActions.setSubmitting(false);
             }, 500);
+            if (true){
+              NavigationService.navigate("ConfirmPayment");
+            }
           }}>
           {props => (
             <View>
@@ -183,7 +196,7 @@ class SendPayment extends Component{
   render(){
     return (
       <Container>
-        <Form account={this.props.account}/>
+        <Form account={this.props.account} navigation={this.props.navigation}/>
       </Container>
     )
   }

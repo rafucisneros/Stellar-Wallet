@@ -1,6 +1,7 @@
 import React from 'react';
 import { createAppContainer } from "react-navigation";
 import { createDrawerNavigator } from "react-navigation-drawer";
+import { createStackNavigator } from "react-navigation-stack";
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -11,6 +12,7 @@ import Trustlines from './trustlines/trustlines';
 import AddAccount from './addAccount/addAccount';
 import Contacts from './contacts/contacts';
 import About from './about/about';
+import ConfirmPayment from "./home/confirmPayment";
 
 const DrawerNavigator = createDrawerNavigator(
   {
@@ -80,7 +82,6 @@ const DrawerNavigator = createDrawerNavigator(
         drawerIcon: ({ tintColor }) => (  
               <Icon style={[{color: tintColor}]} size={25} name={'people-outline'}/>
         )
-        // <Icon style={[{color: "#fff"}]} size={25} name={'person-add'}/>
       }
     }
   },
@@ -95,5 +96,26 @@ const DrawerNavigator = createDrawerNavigator(
     }
   }
 );
-const Main = createAppContainer(DrawerNavigator);
+
+const StackNavigator = createStackNavigator(
+  {
+    DrawerHome: {
+      screen: DrawerNavigator,
+      navigationOptions: {
+        header: null
+      }
+    },
+    ConfirmPayment: {
+      screen: ConfirmPayment,
+      navigationOptions: {
+        title: "Confirm Payment"
+      }
+    }
+  },
+  {
+    initialRouteName: "DrawerHome"
+  }
+);
+
+const Main = createAppContainer(StackNavigator);
 export default Main;

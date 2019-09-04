@@ -16,14 +16,15 @@ class Balance extends Component{
   }  
   render(){
     return (
-      <View>
+      <View style={{margin: 5}}>
         <View>
-          <Text style={styles.title}>Asset Type:</Text>    
-          <Text>{this.props.balance.item.asset_type}</Text>    
-        </View>
-        <View>
-          <Text style={styles.title}>Balance:</Text>  
-          <Text>{this.props.balance.item.balance}</Text>  
+          <View style={{flexDirection: "row"}}>
+            <Text style={[{width: "50%"}]}>
+              {this.props.balance.item.asset_type  === "native" ? "XLM" : 
+               this.props.balance.item.asset_code}
+            </Text>    
+            <Text style={[{width: "50%"}]}>{this.props.balance.item.balance}</Text>
+          </View>   
         </View>
       </View>
     )
@@ -65,6 +66,10 @@ class Account extends Component {
             <Text style={styles.sectionTitle}>
               Balances
             </Text>
+            <View style={{flexDirection: "row"}}>
+              <Text style={[styles.title, {width: "50%"}]}>Asset Type:</Text>    
+              <Text style={[styles.title, {width: "50%"}]}>Balances:</Text>
+            </View>
             <FlatList 
               data = { this.props.account.balances }
               renderItem = { this.renderBalance }

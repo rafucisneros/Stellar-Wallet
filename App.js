@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './src/redux/store';
 
+import NavigationService from './src/utils/NavigationService';
 import Main from './src/Main';
 
 export default class App extends Component {
@@ -18,7 +19,11 @@ export default class App extends Component {
           loading={<LoadingState />}
           persistor={persistor}
         >
-          <Main />
+          <Main 
+            ref={navigatorRef => {
+              NavigationService.setTopLevelNavigator(navigatorRef);
+            }}
+          />
         </PersistGate>
       </Provider>
     )
