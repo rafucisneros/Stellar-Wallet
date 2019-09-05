@@ -1,7 +1,8 @@
 import {Server} from 'stellar-sdk';
 
 class Stellar{
-  static server = new Server('https://horizon-testnet.stellar.org');
+  // static server = new Server('https://horizon-testnet.stellar.org');
+  static server = new Server('https://horizon.stellar.org');
 
   static async loadAccount(accountId){
     try{
@@ -14,14 +15,24 @@ class Stellar{
     }
   }
 
-  static async loadTransactionsForAccount(accountId){
-    try{
-      const transactions = await this.server.transactions()
-        .forAccount(accountId).call();
-      return transactions;
+  static async loadOperationsForAccount(accountId){
+    try{ 
+      const operations = await this.server.operations()
+      .forAccount(accountId).order("desc").limit(20).call();
+      return operations;
     } catch (e) {
-      console.log("An error ocurred trying to load transactions."); 
+      console.log("An error ocurred trying to load operations."); 
       console.log(e);     
+    }
+  }
+
+  static async getTransactionByHash(transactionHash){
+    try{
+      const transaction = await this.server.transactions().transaction(transactionHash).call();
+      return transaction;
+    } catch (e) {
+      console.log("An error ocurred trying to load transaction by hash.");
+      console.log(e)
     }
   }
 }

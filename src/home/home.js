@@ -3,7 +3,7 @@ import { createAppContainer } from "react-navigation";
 import { View } from 'react-native';
 
 import Account from './account';
-import Transactions from './transactions';
+import Operations from './operations';
 import ID from './id';
 import SendPayment from './sendPayment';
 import MenuTop from '../utils/MenuTop';
@@ -23,9 +23,9 @@ const tabNavigator = createMaterialBottomTabNavigator(
         ),  
       }  
     },
-    Transactions: { screen: Transactions,  
+    Operations: { screen: Operations,  
       navigationOptions:{  
-        tabBarLabel:'Transactions',  
+        tabBarLabel:'Operations',  
         tabBarIcon: ({ tintColor }) => (  
           <View>  
               <Icon style={[{color: tintColor}]} size={25} name={'library-books'}/>  
@@ -54,7 +54,7 @@ const tabNavigator = createMaterialBottomTabNavigator(
       }  
     }
   }, {
-    initialRouteName: 'SendPayment',
+    initialRouteName: 'Operations',
     activeColor: '#f0edf6',
     inactiveColor: '#3e2465',
     barStyle: { backgroundColor: '#0097A7' },

@@ -23,35 +23,43 @@ class ID extends Component{
   }
 
   render(){
+    if (this.props.accountId){
+      return (
+        <View style={{flex:1}}>
+          <Container>
+            <View style={[styles.section]}>
+              <Text style={[styles.sectionTitle]}>
+                Account ID
+              </Text>
+              <View style={[{flexDirection: "row", justifyContent: "space-between"}]}>
+                <View style={{width:"80%"}}>
+                  <Text>{this.props.accountId}</Text>
+                </View>
+                <View style={{width:"10%"}}>
+                  <TouchableOpacity
+                    onPress = { this.copyToClipboard }
+                  >
+                    <Icon size={25} name={'content-copy'}/>
+                  </TouchableOpacity>                
+                </View>
+              </View>          
+            </View>
+            <View>
+              <Image 
+                style={{height: 256}}             
+                source={{uri: "https://chart.googleapis.com/chart?chl=GAL2KXOLC4ZW4HBHYHVKTQXYI6LNQZMH6I4MM7NGTVNQFU4P7ISC4WDF&cht=qr&chs=256x256"}}
+              />
+            </View>
+          </Container>
+          {this.state.copied && <Text style={styles.copied}>Copied to Clipboard!</Text>}
+        </View>
+      )
+    }
     return (
-      <View style={{flex:1}}>
-        <Container>
-          <View style={[styles.section]}>
-            <Text style={[styles.sectionTitle]}>
-              Account ID
-            </Text>
-            <View style={[{flexDirection: "row", justifyContent: "space-between"}]}>
-              <View style={{width:"80%"}}>
-                <Text>{this.props.accountId}</Text>
-              </View>
-              <View style={{width:"10%"}}>
-                <TouchableOpacity
-                  onPress = { this.copyToClipboard }
-                >
-                  <Icon size={25} name={'content-copy'}/>
-                </TouchableOpacity>                
-              </View>
-            </View>          
-          </View>
-          <View>
-            <Image 
-              style={{height: 256}}             
-              source={{uri: "https://chart.googleapis.com/chart?chl=GAL2KXOLC4ZW4HBHYHVKTQXYI6LNQZMH6I4MM7NGTVNQFU4P7ISC4WDF&cht=qr&chs=256x256"}}
-            />
-          </View>
-        </Container>
-        {this.state.copied && <Text style={styles.copied}>Copied to Clipboard!</Text>}
-      </View>
+      <Container>
+        <Text style={{alignSelf: "center"}}>Loading Account...</Text>
+        <ActivityIndicator size="large" color="#000" />
+      </Container>
     )
   }
 }
