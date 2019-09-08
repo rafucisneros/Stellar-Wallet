@@ -8,14 +8,14 @@ import styles from '../utils/Styles'
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-class ID extends Component{
+class AccountIdentification extends Component{
   constructor(props){
     super(props)
     this.state = {copied: false}
   }
 
   copyToClipboard = async () => {
-    Clipboard.setString(this.props.accountId);
+    Clipboard.setString(this.props.publicKey);
     this.setState({copied: true});
     setTimeout(() => {
       this.setState({copied: false})
@@ -23,17 +23,17 @@ class ID extends Component{
   }
 
   render(){
-    if (this.props.accountId){
+    if (this.props.publicKey){
       return (
         <View style={{flex:1}}>
           <Container>
             <View style={[styles.section]}>
               <Text style={[styles.sectionTitle]}>
-                Account ID
+                Public Key
               </Text>
               <View style={[{flexDirection: "row", justifyContent: "space-between"}]}>
                 <View style={{width:"80%"}}>
-                  <Text>{this.props.accountId}</Text>
+                  <Text>{this.props.publicKey}</Text>
                 </View>
                 <View style={{width:"10%"}}>
                   <TouchableOpacity
@@ -66,7 +66,7 @@ class ID extends Component{
 
 function mapStateToProps(state){
   return {
-    accountId: state.accountReducer.accountId
+    publicKey: state.accountReducer.publicKey
   };
 }
-export default connect(mapStateToProps)(ID);
+export default connect(mapStateToProps)(AccountIdentification);

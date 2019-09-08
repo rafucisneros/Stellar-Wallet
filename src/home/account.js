@@ -11,9 +11,6 @@ import { connect } from 'react-redux';
 import { store } from '../redux/store';
 
 class Balance extends Component{
-  constructor(props){
-    super(props)
-  }  
   render(){
     return (
       <View style={{margin: 5}}>
@@ -32,12 +29,9 @@ class Balance extends Component{
 }
 
 class Account extends Component {
-  constructor(props){
-    super(props);
-  }
 
   async componentDidMount(){
-    account = await Stellar.loadAccount(this.props.accountId);
+    account = await Stellar.getAccount(this.props.publicKey);
     store.dispatch({
       type: "LOAD_ACCOUNT",
       payload: {
@@ -58,7 +52,7 @@ class Account extends Component {
         <Container>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              Account ID
+              Public Key
             </Text>
             <Text>{this.props.account.id}</Text>
           </View>
@@ -92,7 +86,7 @@ class Account extends Component {
 function mapStateToProps(state){
   return {
     account: state.accountReducer.account,
-    accountId: state.accountReducer.accountId
+    publicKey: state.accountReducer.publicKey
   };
 }
 export default connect(mapStateToProps)(Account);

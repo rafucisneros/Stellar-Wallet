@@ -1,8 +1,7 @@
 import React, { Component }  from 'react';
 import { Text, View, StyleSheet, TextInput, 
-  Picker, TouchableOpacity 
+  Picker, Alert
 } from 'react-native';
-import { NavigationActions } from 'react-navigation';
 import Container from '../utils/Container'
 
 import { connect } from 'react-redux';
@@ -12,14 +11,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import NavigationService from '../utils/NavigationService';
+import Stellar from '../utils/Stellar';
 
-const navigateAction = NavigationActions.navigate({
-  routeName: 'StackNavigator',
-
-  params: {},
-
-  action: NavigationActions.navigate({ routeName: 'ConfirmPayment' }),
-});
 
 class Form extends React.Component {
   constructor(props){
@@ -30,7 +23,23 @@ class Form extends React.Component {
     )[0].balance;
     this.state = {currency, balance};
   }
-  emailInput = null;
+
+  submitPayment = async (values, formikActions) => {
+    console.log(values);
+    accountExists = await Stellar.accountExists(values.recipient);
+    if (accountExists === true) {
+      formikActions.setSubmitting(false);
+      NavigationService.navigate("ConfirmPayment");
+    } else if (accountExists.message == "Request failed with status code 404") {
+      formikActions.setSubmitting(false);    
+      Alert.alert(`The account provided is not created yet. 
+      You need to make a "Create Account" operation in order to create it`)
+    } else{
+      formikActions.setSubmitting(false);    
+      Alert.alert("The key provided is not a valid Stellar Key.")
+    }
+  }
+
   render() {
     if (this.props.account){
       return (
@@ -52,16 +61,7 @@ class Form extends React.Component {
               memo: Yup.string()
                 .max(28, "Memos can only have 28 characters (Special characters like \"ñ\" may count as 2).")
             })}
-            onSubmit={(values, formikActions) => {
-              console.log(values);
-              console.log(formikActions);
-              setTimeout(() => {
-                formikActions.setSubmitting(false);
-              }, 500);
-              if (true){
-                NavigationService.navigate("ConfirmPayment");
-              }
-            }}>
+            onSubmit={ this.submitPayment }>
             {props => (
               <View>
               <Text>Recipient Address</Text>
@@ -72,9 +72,6 @@ class Form extends React.Component {
                   autoFocus
                   placeholder="Recipient Address"
                   style={styles.input}
-                  onSubmitEditing={() => {
-                    this.currencyInput.focus()
-                  }}
                 />
                 {props.touched.recipient && props.errors.recipient ? (
                   <Text style={styles.error}>{props.errors.recipient}</Text>
@@ -103,7 +100,6 @@ class Form extends React.Component {
                         <Picker.Item label="XLM" value={balance.asset_type} key={index} />
                         : <Picker.Item label={balance.asset_code} value={balance.asset_code} key={index} />
                       ))}
-                      {/* <Picker.Item label="XLM" value="native" /> */}
                     </Picker>
                   </View>  
                   <View style={{width: "60%"}}>
@@ -211,8 +207,7 @@ class SendPayment extends Component{
 
 function mapStateToProps(state){
   return {
-    account: state.accountReducer.account,
-    accountId: state.accountReducer.accountId
+    account: state.accountReducer.account
   };
 }
 export default connect(mapStateToProps)(SendPayment);

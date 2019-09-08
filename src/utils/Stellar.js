@@ -1,10 +1,17 @@
 import {Server} from 'stellar-sdk';
 
 class Stellar{
-  // static server = new Server('https://horizon-testnet.stellar.org');
-  static server = new Server('https://horizon.stellar.org');
 
-  static async loadAccount(accountId){
+  static OPERATIONS_TYPES = ["Create_Account",
+    "Payment", "Path_Payment", "Manage_Buy_Offer",
+    "Manage_Sell_Offer", "Create_Passive_Sell_Offer",
+    "Set_Options", "Change_Trust", "Allow_Trust", 
+    "Account_Merge", "Inflation", "Manage_Data",
+    "Bump_Sequence"]
+  static server = new Server('https://horizon-testnet.stellar.org');
+  // static server = new Server('https://horizon.stellar.org');
+
+  static async getAccount(accountId){
     try{
       const account = await this.server.accounts()
         .accountId(accountId).call();
@@ -15,7 +22,7 @@ class Stellar{
     }
   }
 
-  static async loadOperationsForAccount(accountId){
+  static async getOperationsForAccount(accountId){
     try{ 
       const operations = await this.server.operations()
       .forAccount(accountId).order("desc").limit(20).call();
@@ -35,5 +42,15 @@ class Stellar{
       console.log(e)
     }
   }
+
+  static async accountExists(accountKey){
+    console.log("chequeando cuentas")
+    result = await this.server.accounts()
+      .accountId(accountKey).call()
+      .then(()=>{return true;}).catch((error)=>{
+        return error});
+    return result;
+  }
 }
+
 export default Stellar;

@@ -4,7 +4,7 @@ import { View } from 'react-native';
 
 import Account from './account';
 import Operations from './operations';
-import ID from './id';
+import AccountIdentification from './accountIdentification';
 import SendPayment from './sendPayment';
 import MenuTop from '../utils/MenuTop';
 
@@ -43,9 +43,9 @@ const tabNavigator = createMaterialBottomTabNavigator(
         ),  
       }  
     },
-    Id: { screen: ID,  
+    AccountIdentification: { screen: AccountIdentification,  
       navigationOptions:{  
-        tabBarLabel:'ID',  
+        tabBarLabel:'Identification',  
         tabBarIcon: ({ tintColor }) => (  
           <View>  
               <Icon style={[{color: tintColor}]} size={25} name={'fingerprint'}/>  
@@ -54,7 +54,7 @@ const tabNavigator = createMaterialBottomTabNavigator(
       }  
     }
   }, {
-    initialRouteName: 'Operations',
+    initialRouteName: 'SendPayment',
     activeColor: '#f0edf6',
     inactiveColor: '#3e2465',
     barStyle: { backgroundColor: '#0097A7' },
