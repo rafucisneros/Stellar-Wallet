@@ -108,7 +108,11 @@ const StackNavigator = createStackNavigator(
     ConfirmPayment: {
       screen: ConfirmPayment,
       navigationOptions: {
-        title: "Confirm Payment"
+        title: "Confirm Payment",
+        headerStyle: {
+          backgroundColor: '#2196F3'
+        },
+        headerTintColor: "#fff"
       }
     }
   },

@@ -44,7 +44,6 @@ class Stellar{
   }
 
   static async accountExists(accountKey){
-    console.log("chequeando cuentas")
     result = await this.server.accounts()
       .accountId(accountKey).call()
       .then(()=>{return true;}).catch((error)=>{

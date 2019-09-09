@@ -35,7 +35,7 @@ class AccountIdentification extends Component{
                 <View style={{width:"80%"}}>
                   <Text>{this.props.publicKey}</Text>
                 </View>
-                <View style={{width:"10%"}}>
+                <View style={{width:"10%", justifyContent: "center"}}>
                   <TouchableOpacity
                     onPress = { this.copyToClipboard }
                   >

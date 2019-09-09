@@ -15,7 +15,7 @@ class Operation extends Component{
   constructor(props){
     super(props)
     this.state = {memo: false}
-    console.log(this.props.operation.item)
+    // console.log(this.props.operation.item)
   }  
 
   async componentDidMount(){

@@ -1,17 +1,18 @@
 import React, { Component }  from 'react';
 import { Text, View, StyleSheet, TextInput, 
-  Picker, Alert
+  Picker, Alert, TouchableOpacity, Clipboard
 } from 'react-native';
 import Container from '../utils/Container'
+import Stellar from '../utils/Stellar';
 
 import { connect } from 'react-redux';
-
 import { Button } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import NavigationService from '../utils/NavigationService';
-import Stellar from '../utils/Stellar';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import styles from '../utils/Styles';
 
 
 class Form extends React.Component {
@@ -25,11 +26,10 @@ class Form extends React.Component {
   }
 
   submitPayment = async (values, formikActions) => {
-    console.log(values);
     accountExists = await Stellar.accountExists(values.recipient);
     if (accountExists === true) {
       formikActions.setSubmitting(false);
-      NavigationService.navigate("ConfirmPayment");
+      NavigationService.navigate("ConfirmPayment", {values});
     } else if (accountExists.message == "Request failed with status code 404") {
       formikActions.setSubmitting(false);    
       Alert.alert(`The account provided is not created yet. 
@@ -65,17 +65,32 @@ class Form extends React.Component {
             {props => (
               <View>
               <Text>Recipient Address</Text>
-              <TextInput
-                  onChangeText={props.handleChange('recipient')}
-                  onBlur={props.handleBlur('recipient')}
-                  value={props.values.recipient}
-                  autoFocus
-                  placeholder="Recipient Address"
-                  style={styles.input}
-                />
-                {props.touched.recipient && props.errors.recipient ? (
-                  <Text style={styles.error}>{props.errors.recipient}</Text>
-                ) : null}
+              <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                <View style={{width:"80%"}}>
+                  <TextInput
+                    onChangeText={props.handleChange('recipient')}
+                    onBlur={props.handleBlur('recipient')}
+                    value={props.values.recipient}
+                    autoFocus
+                    placeholder="Recipient Address"
+                    style={styles.input}
+                    label='recipient'
+                  />
+                  {props.touched.recipient && props.errors.recipient ? (
+                    <Text style={styles.error}>{props.errors.recipient}</Text>
+                  ) : null}
+                </View>
+                <View style={{width:"10%", justifyContent: "center"}}>
+                  <TouchableOpacity
+                    onPress = { async ()=>{
+                      let text = await Clipboard.getString();
+                      props.setFieldValue("recipient", text);
+                    } }
+                  >
+                    <Icon size={25} name={'clipboard'}/>
+                  </TouchableOpacity>
+                </View>
+              </View>
                 <View style={[{flexDirection: "row", justifyContent: "space-between"}]}>
                   <View style={[{width: "40%"}]}>
                     <Text>Currency</Text>
@@ -167,39 +182,13 @@ class Form extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ecf0f1',
-    padding: 8,
-  },
-  title: {
-    margin: 24,
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  error: {
-    margin: 8,
-    fontSize: 14,
-    color: 'red',
-    fontWeight: 'bold',
-  },
-  input: {
-    height: 50,
-    paddingHorizontal: 8,
-    width: '100%',
-    borderColor: '#ddd',
-    borderWidth: 1,
-    backgroundColor: '#fff',
-  },
-});
-
 class SendPayment extends Component{
   render(){
     return (
       <Container>
-        <Form account={this.props.account} navigation={this.props.navigation}/>
+        <View style={styles.section}>
+          <Form account={this.props.account} navigation={this.props.navigation}/>
+        </View>
       </Container>
     )
   }
