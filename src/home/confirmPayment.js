@@ -1,5 +1,5 @@
 import React, { Fragment, Component }  from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, Alert } from 'react-native';
 import Container from '../utils/Container'
 import { connect } from 'react-redux';
 
@@ -7,27 +7,51 @@ import styles from '../utils/Styles';
 import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button } from 'react-native-paper';
+import Stellar from '../utils/Stellar';
+import NavigationService from '../utils/NavigationService';
 
 class ConfirmPayment extends Component{
   constructor(props){
     super(props)
     this.state = {
       showPassword: false,
-     sendingTransaction: false
+      sendingTransaction: false,
+      fee: 0.00001
     }  
+    this.props.password = "";
+  }
+  
+  async componentDidMount(){
+    let fee = await Stellar.getBaseFee()
+    this.setState({fee})
+  }
+
+  sendTransaction = async () => {
+    let values = this.props.navigation.state.params.values
+    this.setState({sendingTransaction: true})
+    let result = await Stellar.submitTransaction(this.props.account.id, 
+      values.recipient, values.amount, values.currency, 
+      this.state.fee, "SABAPCGBLUHAFXBRA3L4HAZFYMNB632OWVJ3G6BPLXJTPQAXWPJ35CD5",
+      values.memo ? values.memo : null)
+    console.log(result)
+    this.setState({sendingTransaction: false})
   }
 
   render(){
-    console.log(this.props)
     let values = this.props.navigation.state.params.values
     let actualXLMBalance = this.props.account.balances.find((balance)=>balance.asset_type==="native").balance
-    let fee = 0.00001
     if (values.currency === "native"){
-      var remainingXLM = actualXLMBalance - values.amount - fee
+      var remainingXLM = ((actualXLMBalance * 10000000) - (values.amount * 10000000) - this.state.fee ) 
+      remainingXLM = Math.round(remainingXLM) / 10000000 
+      if (remainingXLM < 0){
+        Alert.alert(`You need at least to ${this.state.fee / 10000000} XLM to pay transaction fee.`)
+        NavigationService.navigate("DrawerHome")
+      }
     } else {
-      var remainingXLM = actualXLMBalance - fee
+      var remainingXLM = actualXLMBalance - this.state.fee
       let actualBalance = this.props.account.balances.find((balance)=>balance.asset_type===values.currency).balance
-      var remainingBalance = actualBalance - values.amount
+      var remainingBalance = ((actualBalance * 10000000) - (values.amount * 10000000)) 
+      remainingBalance =Math.round(remainingBalance) / 10000000
     }
     return (
       <Fragment>
@@ -48,7 +72,7 @@ class ConfirmPayment extends Component{
             </View>
             <View style={{flexDirection: "row"}}>
               <Text style={[styles.title, {width: "40%"}]}>Transaction Fee:</Text>    
-              <Text style={[styles.title, {width: "60%"}]}> {fee} XLM</Text>
+              <Text style={[styles.title, {width: "60%"}]}> {this.state.fee / 10000000} XLM</Text>
             </View>
             <View style={{flexDirection: "row"}}>
               <Text style={[styles.title, {width: "40%"}]}>Remaining Balance:</Text>    
@@ -73,6 +97,7 @@ class ConfirmPayment extends Component{
                     textContentType="password"
                     placeholder="Enter password"
                     style={styles.input}
+                    onChangeText ={text => { this.password = text} }
                     secureTextEntry={!this.state.showPassword}
                   />
                 </View>
@@ -87,7 +112,7 @@ class ConfirmPayment extends Component{
             </View>
             <View>
               <Button
-                onPress={()=>{}}
+                onPress={ this.sendTransaction }
                 color="#0097A7"
                 mode="contained"
                 loading={this.state.sendingTransaction}
