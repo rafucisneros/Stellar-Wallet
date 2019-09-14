@@ -12,21 +12,6 @@ import { store } from '../redux/store'
 import { connect } from 'react-redux'
 
 class Operation extends Component{
-  constructor(props){
-    super(props)
-    this.state = {memo: false, loadingMemo: true}
-    // console.log(this.props.operation.item)
-  }  
-
-  async componentDidMount(){
-    transaction = await Stellar.getTransactionByHash(this.props.operation.item.transaction_hash);
-    if (transaction.memo_type !== "none"){
-      this.setState({memo: transaction.memo, loadingMemo:false})
-    } else{
-      this.setState({memo: transaction.memo, loadingMemo:false})
-    }
-  }
-
   render(){
     let actionPerformed = 
       <View style={[{flexDirection: "row"}]}>
@@ -132,23 +117,15 @@ class Operation extends Component{
         )
         break
     }
-    if (this.state.loadingMemo){
-      return(
-      <Container>
-        <Text style={{alignSelf: "center"}}>Loading Operation...</Text>
-        <ActivityIndicator size="large" color="#000" />
-      </Container>
-      )
-    }
     return (
       <View>
         {
           fields.map((el, index)=><Fragment key={index}>{el}</Fragment> )
         }
-        { this.state.memo ?
+        { this.props.operation.item.memo ?
           <View style={[{flexDirection: "row"}]}>
             <Text style={[styles.title, {width: "40%"}]}>Memo:</Text>    
-            <Text style={[{width: "60%"}]}>{this.state.memo}</Text>    
+            <Text style={[{width: "60%"}]}>{this.props.operation.item.memo}</Text>    
           </View> : null           
         }
       </View>
@@ -162,22 +139,35 @@ class Operations extends Component{
     this.state = {dialogVisible: true}
   }  
   async componentDidMount(){
-    operations = await Stellar.getOperationsForAccount(this.props.publicKey);
-    store.dispatch({
-      type: "LOAD_OPERATIONS",
-      payload: {
-        operations
-      }
+    operations = await Stellar.getOperationsForAccount("GAJ6S2PB6BSGBH526EI34E7E2PBIE435MYURLDS6TW5NG5DVGZWOTOXN").then((data)=>data.records)
+    let operationsWithMemo = operations.map(async op=>{
+      return op.transaction()
+    })    
+    Promise.all(operationsWithMemo).then(data=>{
+      data.map(transaction=>{
+        if (transaction.memo) {
+          operations.find(operation=>operation.transaction_hash === transaction.hash).memo = transaction.memo    
+        }
+      })
+      console.log(operations)
+      store.dispatch({
+        type: "LOAD_OPERATIONS",
+        payload: {
+          operations: operations
+        }
+      })
     })
   }
 
   renderOperation = operation => {
+    console.log(operation)
     return (
       <Operation operation={operation} publicKey={this.props.publicKey}/>
     )
   }
 
   render(){
+    console.log(this.props.operations)
     if (this.props.operations){
       return (
         <Container style={styles.section}>
@@ -186,7 +176,7 @@ class Operations extends Component{
               Operations
             </Text>
             <FlatList 
-              data = { this.props.operations.records }
+              data = { this.props.operations }
               renderItem = { this.renderOperation }
               ItemSeparatorComponent = { Separators.verticalSeparator }
               keyExtractor = {(item, index) => index.toString()}

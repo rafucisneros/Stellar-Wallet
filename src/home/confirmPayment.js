@@ -126,8 +126,18 @@ class ConfirmPayment extends Component{
               <Text style={[styles.title, {width: "40%"}]}>{this.state.fee / 10000000} XLM</Text>
               <View style={[{width: "20%"}]}>
                 <TouchableOpacity
-                  onPress = { ()=>{Alert.alert("Maximun Fee Allowed", "This is the maximum base fee you’re willing to pay per operation. You’re actually charged the lowest possible fee based on network activity.\
-                  When network activity is below capacity, you pay the network minimum, which is currently 100 stroops (0.00001 XLM) per operation.")} }
+                  onPress = { ()=>{Alert.alert("Maximun Fee Allowed", "This is the maximum base fee you’re willing to pay per operation. You’re actually charged the lowest possible fee based on network activity. When network activity is below capacity, you pay the network minimum, which is currently 100 stroops (0.00001 XLM) per operation.")}}
+                >
+                  <Icon size={25} name={'information-outline'}/>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{flexDirection: "row"}}>
+              <Text style={[styles.title, {width: "40%"}]}>Timeout:</Text>    
+              <Text style={[styles.title, {width: "40%"}]}>60 seconds.</Text>
+              <View style={[{width: "20%"}]}>
+                <TouchableOpacity
+                  onPress = { ()=>{Alert.alert("Timeout", "We will try to submit the transaction for 60 seconds. After this time we will cancel the transaction and it will have to be submitted again. by doing this we can give you certainty about the transaction result in a short time.")} }
                 >
                   <Icon size={25} name={'information-outline'}/>
                 </TouchableOpacity>
