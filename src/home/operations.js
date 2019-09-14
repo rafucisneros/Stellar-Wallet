@@ -1,27 +1,29 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component, Fragment} from 'react'
 import {
   Text, View, FlatList, TouchableOpacity,
   ActivityIndicator, Button
 } from 'react-native';
-import Stellar from '../utils/Stellar';
-import Separators from '../utils/Separators';
+import Stellar from '../utils/Stellar'
+import Separators from '../utils/Separators'
 import styles from '../utils/Styles';
-import Container from '../utils/Container';
+import Container from '../utils/Container'
 
-import { store } from '../redux/store';
-import { connect } from 'react-redux';
+import { store } from '../redux/store'
+import { connect } from 'react-redux'
 
 class Operation extends Component{
   constructor(props){
     super(props)
-    this.state = {memo: false}
+    this.state = {memo: false, loadingMemo: true}
     // console.log(this.props.operation.item)
   }  
 
   async componentDidMount(){
     transaction = await Stellar.getTransactionByHash(this.props.operation.item.transaction_hash);
     if (transaction.memo_type !== "none"){
-      this.setState({memo: transaction.memo})
+      this.setState({memo: transaction.memo, loadingMemo:false})
+    } else{
+      this.setState({memo: transaction.memo, loadingMemo:false})
     }
   }
 
@@ -130,6 +132,14 @@ class Operation extends Component{
         )
         break
     }
+    if (this.state.loadingMemo){
+      return(
+      <Container>
+        <Text style={{alignSelf: "center"}}>Loading Operation...</Text>
+        <ActivityIndicator size="large" color="#000" />
+      </Container>
+      )
+    }
     return (
       <View>
         {
@@ -149,6 +159,7 @@ class Operation extends Component{
 class Operations extends Component{
   constructor(props){
     super(props);
+    this.state = {dialogVisible: true}
   }  
   async componentDidMount(){
     operations = await Stellar.getOperationsForAccount(this.props.publicKey);

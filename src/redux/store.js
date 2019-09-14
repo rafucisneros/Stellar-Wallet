@@ -7,7 +7,7 @@ function accountReducer(state = {}, action){
     case ("LOAD_ACCOUNT"): {
       return {... state, ...action.payload};
     }
-    case ("LOAD_TRANSACTIONS"): {
+    case ("LOAD_OPERATIONS"): {
       return {... state, ...action.payload};
     }
     default:
@@ -17,7 +17,9 @@ function accountReducer(state = {}, action){
 
 const persistCongif = {
   key: 'root',
-  storage
+  storage,
+  blacklist: ['transactionResult', 'dialogVisible', 
+  "showPassword", "sendingTransaction", "fee" ]
 };
 
 const reducer = combineReducers({
@@ -27,8 +29,15 @@ const reducer = combineReducers({
 const persistedReducer = persistReducer(persistCongif, reducer);
 
 const store = 
-  createStore(persistedReducer,
-    {accountReducer: {accountId: "GAL2KXOLC4ZW4HBHYHVKTQXYI6LNQZMH6I4MM7NGTVNQFU4P7ISC4WDF"}}
+  createStore(persistedReducer, {
+    accountReducer: {
+      // account: {
+        publicKey: "GAJ6S2PB6BSGBH526EI34E7E2PBIE435MYURLDS6TW5NG5DVGZWOTOXN",
+        secretKey: "SABAPCGBLUHAFXBRA3L4HAZFYMNB632OWVJ3G6BPLXJTPQAXWPJ35CD5"
+      // }
+    }
+  } // test network
+    // {accountReducer: {accountId: "GDIST7XTJR3QZ2B7QZTBI3SKFR4JP6RFQTDUOKCFEMGVLHLYRAPLYMDN"}}     // real network
   );
   const persistor = persistStore(store);
 
