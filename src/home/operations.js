@@ -1,8 +1,10 @@
 import React, {Component, Fragment} from 'react'
 import {
-  Text, View, FlatList, RefreshControl, ScrollView,
+  Text, View, FlatList, TouchableOpacity, 
   ActivityIndicator, Button, Alert
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 import Stellar from '../utils/Stellar'
 import Separators from '../utils/Separators'
 import styles from '../utils/Styles';
@@ -138,7 +140,7 @@ class Operations extends Component{
     super(props);
     this.state = {refreshing: false}
   }  
-  async componentDidMount(){
+  async loadOperations(){
     operations = await Stellar.getOperationsForAccount("GAJ6S2PB6BSGBH526EI34E7E2PBIE435MYURLDS6TW5NG5DVGZWOTOXN").then((data)=>data.records)
     let operationsWithMemo = operations.map(async op=>{
       return op.transaction()
@@ -158,67 +160,52 @@ class Operations extends Component{
     })
   }
 
+  async componentDidMount(){
+    await this.loadOperations()
+  }
+
   renderOperation = operation => {
     return (
       <Operation operation={operation} publicKey={this.props.publicKey}/>
     )
   }
 
-  refreshOperations = async () => {
-    this.setState({
-      refreshing: true
-    })
-    operations = await Stellar.getOperationsForAccount(this.props.publicKey).then((data)=>data.records)
-    let operationsWithMemo = operations.map(async op=>{
-      return op.transaction()
-    })    
-    Promise.all(operationsWithMemo).then(data=>{
-      data.map(transaction=>{
-        if (transaction.memo) {
-          operations.find(operation=>operation.transaction_hash === transaction.hash).memo = transaction.memo    
-        }
-      })
-      store.dispatch({
-        type: "LOAD_OPERATIONS",
-        payload: {
-          operations: operations
-        }
-      })
-    })
+  refreshPage = async () => {
+    this.setState({refreshing: true})
+    await this.loadOperations()
+    this.setState({refreshing: false})
   }
 
   render(){   
     if (this.props.operations){
       return (
-        <Fragment>
-          <ScrollView
-            contentInsetAdjustmentBehavior="automatic"
-            refreshControl={
-              <RefreshControl refreshing = { this.state.refreshing } onRefresh = {this.refreshOperations} />
-            } 
-          >
-              <View style={styles.sectionContainer}>
-                <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>
-                    Operations
-                  </Text>
-                  <FlatList 
-                    data = { this.props.operations }
-                    renderItem = { this.renderOperation }
-                    ItemSeparatorComponent = { Separators.verticalSeparator }
-                    keyExtractor = {(item, index) => index.toString()}
-                  />
-                  <View style={{margin: 5}}>
-                    <Button
-                      title="Load More..."
-                      disabled
-                      onPress={() => Alert.alert('Cannot press this one')}                
-                    />
-                  </View>
-                </View>
+        <Container refreshing={ this.state.refreshing } onRefresh={ this.refreshPage }>
+          <View style={styles.section}>
+            <View style={{flexDirection: "row"}}>
+              <Text style={[styles.sectionTitle, {width: "80%"}]}>
+                Operations
+              </Text>
+              <View style={{width: "20%"}}>
+                <TouchableOpacity onPress = { this.refreshPage }>
+                  <Icon size={25} name={'refresh'}/>
+                </TouchableOpacity>
               </View>
-          </ScrollView>
-        </Fragment>
+            </View>
+            <FlatList 
+              data = { this.props.operations }
+              renderItem = { this.renderOperation }
+              ItemSeparatorComponent = { Separators.verticalSeparator }
+              keyExtractor = {(item, index) => index.toString()}
+            />
+            <View style={{margin: 5}}>
+              <Button
+                title="Load More..."
+                disabled
+                onPress={() => Alert.alert('Cannot press this one')}                
+              />
+            </View>
+          </View>
+        </Container>                
       )
     }
     return (

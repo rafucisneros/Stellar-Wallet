@@ -41,7 +41,6 @@ class ConfirmPayment extends Component{
       try{
         const transactionDetails = await fetch(result._links.transaction.href)
         const transactionResultData = await transactionDetails.json()
-        console.log(transactionResultData)
         this.setState({sendingTransaction: false, dialogVisible: true,
           transactionResult: transactionResultData})
       } catch(error){
@@ -92,7 +91,7 @@ class ConfirmPayment extends Component{
               <View style={[{flexDirection: "row", justifyContent: "space-between"}]}>
                 <View style={{width:"80%"}}>
                   <Text>
-                    The maximun fee allowed was {this.state.transactionResult.max_fee}. You actually paid {this.state.transactionResult.fee_paid} Troops.
+                    The maximun fee allowed was {this.state.transactionResult.max_fee} Troops. You actually paid {this.state.transactionResult.fee_paid} Troops.
                   </Text>
                 </View>
                 <View style={{width:"10%", justifyContent: "center"}}>

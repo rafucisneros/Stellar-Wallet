@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import {
-    Text, View, FlatList, ActivityIndicator
+    Text, View, FlatList, ActivityIndicator,
+    TouchableOpacity
 } from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 import Separators from '../utils/Separators'
 import Stellar from '../utils/Stellar'
 import styles from '../utils/Styles'
@@ -29,8 +32,12 @@ class Balance extends Component{
 }
 
 class Account extends Component {
-
-  async componentDidMount(){
+  constructor(props){
+    super(props)
+    this.state = {refreshing: false}
+  }
+  
+  async loadAccount(){
     account = await Stellar.getAccount(this.props.publicKey)
     store.dispatch({
       type: "LOAD_ACCOUNT",
@@ -40,16 +47,26 @@ class Account extends Component {
     })
   }
 
+  async componentDidMount(){
+    await this.loadAccount()
+  }
+
   renderBalance = balance => {
     return (
       <Balance balance={balance} />
     )
   }
 
+  refreshPage = async () => {
+    this.setState({refreshing: true})
+    await this.loadAccount()
+    this.setState({refreshing: false})
+  }
+
   render() {
     if (this.props.account){
       return (
-        <Container>
+        <Container refreshing={ this.state.refreshing } onRefresh={ this.refreshPage }>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
               Public Key
@@ -57,10 +74,17 @@ class Account extends Component {
             <Text>{this.props.publicKey}</Text>
           </View>
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
-              Balances
-            </Text>
             <View style={{flexDirection: "row"}}>
+              <Text style={[styles.sectionTitle, {width: "80%"}]}>
+                Balances
+              </Text>
+              <View style={{width: "20%"}}>
+                <TouchableOpacity onPress = { this.refreshPage }>
+                  <Icon size={25} name={'refresh'}/>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{flexDirection: "row", alignItems: "space-around"}}>
               <Text style={[styles.title, {width: "50%"}]}>Asset Type:</Text>    
               <Text style={[styles.title, {width: "50%"}]}>Balances:</Text>
             </View>
