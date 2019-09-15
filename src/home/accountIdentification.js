@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 class AccountIdentification extends Component{
   constructor(props){
     super(props)
-    this.state = {copied: true}
+    this.state = {copied: false}
   }
 
   copyToClipboard = async () => {
