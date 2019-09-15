@@ -1,6 +1,7 @@
 import React, { Component }  from 'react';
-import { Text, View, StyleSheet, TextInput, 
-  Picker, Alert, TouchableOpacity, Clipboard
+import { Text, View, TextInput, 
+  Picker, Alert, TouchableOpacity, Clipboard,
+  ActivityIndicator
 } from 'react-native';
 import Container from '../utils/Container'
 import Stellar from '../utils/Stellar';
@@ -184,11 +185,19 @@ class Form extends React.Component {
 
 class SendPayment extends Component{
   render(){
+    if (this.props.account){
+      return (
+        <Container>
+          <View style={styles.section}>
+            <Form account={this.props.account} navigation={this.props.navigation}/>
+          </View>
+        </Container>
+      )
+    }
     return (
       <Container>
-        <View style={styles.section}>
-          <Form account={this.props.account} navigation={this.props.navigation}/>
-        </View>
+        <Text style={{alignSelf: "center"}}>Loading Account...</Text>
+        <ActivityIndicator size="large" color="#000" />
       </Container>
     )
   }

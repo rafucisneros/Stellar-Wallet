@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react'
 import {
-  Text, View, FlatList, TouchableOpacity,
-  ActivityIndicator, Button
+  Text, View, FlatList, RefreshControl, ScrollView,
+  ActivityIndicator, Button, Alert
 } from 'react-native';
 import Stellar from '../utils/Stellar'
 import Separators from '../utils/Separators'
@@ -136,7 +136,7 @@ class Operation extends Component{
 class Operations extends Component{
   constructor(props){
     super(props);
-    this.state = {dialogVisible: true}
+    this.state = {refreshing: false}
   }  
   async componentDidMount(){
     operations = await Stellar.getOperationsForAccount("GAJ6S2PB6BSGBH526EI34E7E2PBIE435MYURLDS6TW5NG5DVGZWOTOXN").then((data)=>data.records)
@@ -149,7 +149,6 @@ class Operations extends Component{
           operations.find(operation=>operation.transaction_hash === transaction.hash).memo = transaction.memo    
         }
       })
-      console.log(operations)
       store.dispatch({
         type: "LOAD_OPERATIONS",
         payload: {
@@ -160,36 +159,66 @@ class Operations extends Component{
   }
 
   renderOperation = operation => {
-    console.log(operation)
     return (
       <Operation operation={operation} publicKey={this.props.publicKey}/>
     )
   }
 
-  render(){
-    console.log(this.props.operations)
+  refreshOperations = async () => {
+    this.setState({
+      refreshing: true
+    })
+    operations = await Stellar.getOperationsForAccount(this.props.publicKey).then((data)=>data.records)
+    let operationsWithMemo = operations.map(async op=>{
+      return op.transaction()
+    })    
+    Promise.all(operationsWithMemo).then(data=>{
+      data.map(transaction=>{
+        if (transaction.memo) {
+          operations.find(operation=>operation.transaction_hash === transaction.hash).memo = transaction.memo    
+        }
+      })
+      store.dispatch({
+        type: "LOAD_OPERATIONS",
+        payload: {
+          operations: operations
+        }
+      })
+    })
+  }
+
+  render(){   
     if (this.props.operations){
       return (
-        <Container style={styles.section}>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
-              Operations
-            </Text>
-            <FlatList 
-              data = { this.props.operations }
-              renderItem = { this.renderOperation }
-              ItemSeparatorComponent = { Separators.verticalSeparator }
-              keyExtractor = {(item, index) => index.toString()}
-            />
-            <View style={{margin: 5}}>
-              <Button
-                title="Load More..."
-                disabled
-                onPress={() => Alert.alert('Cannot press this one')}                
-              />
-            </View>
-          </View>
-        </Container>
+        <Fragment>
+          <ScrollView
+            contentInsetAdjustmentBehavior="automatic"
+            refreshControl={
+              <RefreshControl refreshing = { this.state.refreshing } onRefresh = {this.refreshOperations} />
+            } 
+          >
+              <View style={styles.sectionContainer}>
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>
+                    Operations
+                  </Text>
+                  <FlatList 
+                    data = { this.props.operations }
+                    renderItem = { this.renderOperation }
+                    ItemSeparatorComponent = { Separators.verticalSeparator }
+                    keyExtractor = {(item, index) => index.toString()}
+                  />
+                  <View style={{margin: 5}}>
+                    <Button
+                      title="Load More..."
+                      disabled
+                      onPress={() => Alert.alert('Cannot press this one')}                
+                    />
+                  </View>
+                </View>
+              </View>
+          </ScrollView>
+        </Fragment>
       )
     }
     return (

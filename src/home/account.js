@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
     Text, View, FlatList, ActivityIndicator
-} from 'react-native';
-import Separators from '../utils/Separators';
-import Stellar from '../utils/Stellar';
-import styles from '../utils/Styles';
-import Container from '../utils/Container';
+} from 'react-native'
+import Separators from '../utils/Separators'
+import Stellar from '../utils/Stellar'
+import styles from '../utils/Styles'
+import Container from '../utils/Container'
 
-import { connect } from 'react-redux';
-import { store } from '../redux/store';
+import { connect } from 'react-redux'
+import { store } from '../redux/store'
 
 class Balance extends Component{
   render(){
@@ -31,7 +31,7 @@ class Balance extends Component{
 class Account extends Component {
 
   async componentDidMount(){
-    account = await Stellar.getAccount(this.props.publicKey);
+    account = await Stellar.getAccount(this.props.publicKey)
     store.dispatch({
       type: "LOAD_ACCOUNT",
       payload: {
@@ -54,7 +54,7 @@ class Account extends Component {
             <Text style={styles.sectionTitle}>
               Public Key
             </Text>
-            <Text>{this.props.account.id}</Text>
+            <Text>{this.props.publicKey}</Text>
           </View>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
@@ -87,6 +87,6 @@ function mapStateToProps(state){
   return {
     account: state.accountReducer.account,
     publicKey: state.accountReducer.publicKey
-  };
+  }
 }
-export default connect(mapStateToProps)(Account);
+export default connect(mapStateToProps)(Account)

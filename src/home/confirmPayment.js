@@ -33,9 +33,9 @@ class ConfirmPayment extends Component{
   sendTransaction = async () => {
     let values = this.props.navigation.state.params.values
     this.setState({sendingTransaction: true})
-    let result = await Stellar.submitTransaction(this.props.account.id, 
+    let result = await Stellar.submitTransaction(this.props.publicKey, 
       values.recipient, values.amount, values.currency, 
-      this.state.fee, "SABAPCGBLUHAFXBRA3L4HAZFYMNB632OWVJ3G6BPLXJTPQAXWPJ35CD5",
+      this.state.fee, this.props.secretKey,
       values.memo ? values.memo : null)
     if (result){
       try{
@@ -45,7 +45,7 @@ class ConfirmPayment extends Component{
         this.setState({sendingTransaction: false, dialogVisible: true,
           transactionResult: transactionResultData})
       } catch(error){
-        Alert.alert("Error","Transaction submitted succesfully, but error loading details.")
+        Alert.alert("Error","Transaction submitted successfully, but error loading details.")
         console.log(error)
         this.setState({sendingTransaction: false})
         this.props.navigation.dispatch(StackActions.pop({
@@ -76,7 +76,7 @@ class ConfirmPayment extends Component{
         {this.state.transactionResult ? 
           <MaterialDialog
             titleColor={this.state.transactionResult.successful ? "green" : "red"}
-            title={this.state.transactionResult.successful ? "Transaction Succesful!" : "Transaction Failed!"} 
+            title={this.state.transactionResult.successful ? "Transaction Successful!" : "Transaction Failed!"} 
             visible={this.state.dialogVisible}
             onOk={() => {
                 this.setState({ dialogVisible: false })
@@ -88,7 +88,7 @@ class ConfirmPayment extends Component{
             >
             <Fragment>
 
-              <Text>Your transaction was succesfully submitted into the ledger #{this.state.transactionResult.ledger}.</Text>
+              <Text>Your transaction was successfully submitted into the ledger #{this.state.transactionResult.ledger}.</Text>
               <View style={[{flexDirection: "row", justifyContent: "space-between"}]}>
                 <View style={{width:"80%"}}>
                   <Text>
@@ -137,7 +137,7 @@ class ConfirmPayment extends Component{
               <Text style={[styles.title, {width: "40%"}]}>60 seconds.</Text>
               <View style={[{width: "20%"}]}>
                 <TouchableOpacity
-                  onPress = { ()=>{Alert.alert("Timeout", "We will try to submit the transaction for 60 seconds. After this time we will cancel the transaction and it will have to be submitted again. by doing this we can give you certainty about the transaction result in a short time.")} }
+                  onPress = { ()=>{Alert.alert("Timeout", "We will try to submit the transaction for 60 seconds. After this time we will cancel the transaction and it will have to be submitted again. By doing this we can give you certainty about the transaction result in a short time.")} }
                 >
                   <Icon size={25} name={'information-outline'}/>
                 </TouchableOpacity>
@@ -201,7 +201,8 @@ class ConfirmPayment extends Component{
 function mapStateToProps(state){
   return {
     account: state.accountReducer.account,
-    publicKey: state.accountReducer.publicKey
+    publicKey: state.accountReducer.publicKey,
+    secretKey: state.accountReducer.secretKey
   };
 }
 export default connect(mapStateToProps)(ConfirmPayment);

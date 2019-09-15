@@ -54,7 +54,7 @@ const tabNavigator = createMaterialBottomTabNavigator(
       }  
     }
   }, {
-    initialRouteName: 'Operations',
+    initialRouteName: 'Account',
     activeColor: '#f0edf6',
     inactiveColor: '#3e2465',
     barStyle: { backgroundColor: '#0097A7' },

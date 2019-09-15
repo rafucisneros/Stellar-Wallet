@@ -7,11 +7,9 @@ function Container(props){
     <Fragment>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollView}>
-        <View style={styles.body}>
-          <View style={styles.sectionContainer}>
-            {props.children}
-          </View>
+      >
+        <View style={styles.sectionContainer}>
+          {props.children}
         </View>
       </ScrollView>
     </Fragment>

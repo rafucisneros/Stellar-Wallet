@@ -1,6 +1,6 @@
-import React, { Fragment, Component }  from 'react';
+import React, { Component }  from 'react';
 import { Text, View, Clipboard, TouchableOpacity, 
-  Image
+  Image, ActivityIndicator
 } from 'react-native';
 import Container from '../utils/Container'
 import styles from '../utils/Styles'
@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 class AccountIdentification extends Component{
   constructor(props){
     super(props)
-    this.state = {copied: false}
+    this.state = {copied: true}
   }
 
   copyToClipboard = async () => {

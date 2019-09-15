@@ -19,7 +19,8 @@ const persistCongif = {
   key: 'root',
   storage,
   blacklist: ['transactionResult', 'dialogVisible', 
-  "showPassword", "sendingTransaction", "fee" ]
+  'showPassword', 'sendingTransaction', 'fee',' refreshing',
+  'copied' ]
 };
 
 const reducer = combineReducers({
