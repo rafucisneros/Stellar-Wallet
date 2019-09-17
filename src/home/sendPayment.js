@@ -28,33 +28,46 @@ class SendPayment extends Component{
   }
 
   submitPayment = async (values, formikActions) => {
-    accountExists = await Stellar.accountExists(values.recipient);
-    if (accountExists === true) {
+    try{
+      accountExists = await Stellar.accountExists(values.recipient);
       formikActions.setSubmitting(false);
       NavigationService.navigate("ConfirmPayment", {values});
-    } else if (accountExists.message == "Request failed with status code 404") {
-      formikActions.setSubmitting(false);    
-      Alert.alert(`The account provided is not created yet. 
-      You need to make a "Create Account" operation in order to create it`)
-    } else{
-      formikActions.setSubmitting(false);    
-      Alert.alert("The key provided is not a valid Stellar Key.")
+
+    } catch (error){
+      if (error.message == "Request failed with status code 404") {
+        formikActions.setSubmitting(false);    
+        Alert.alert("Destination account not funded.",`The account provided is not created yet. 
+        You need to make a "Create Account" operation in order to create it`)
+      } else if (error.message == "Network Error"){
+        Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
+      } else {
+        formikActions.setSubmitting(false);    
+        Alert.alert("Key Error", "The key provided is not a valid Stellar Key.")
+      }
+    } finally {
+      formikActions.setSubmitting(false);
     }
   }
 
   refreshPage = async () => {
     this.setState({refreshing: true})
-    account = await Stellar.getAccount(this.props.publicKey)
-    store.dispatch({
-      type: "LOAD_ACCOUNT",
-      payload: {
-        account
-      }
-    })
-    balance = this.props.account.balances.filter(
-      ({asset_type})=> asset_type == currency
-    )[0].balance;
-    this.setState({balance, refreshing: false})
+    try{
+      account = await Stellar.getAccount(this.props.publicKey)
+      store.dispatch({
+        type: "LOAD_ACCOUNT",
+        payload: {
+          account
+        }
+      })
+      balance = this.props.account.balances.filter(
+        ({asset_type})=> asset_type == currency
+      )[0].balance;
+      this.setState({balance})
+    } catch (error){
+      Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
+    } finally {
+      this.setState({refreshing: false})
+    }
   }
 
   render(){

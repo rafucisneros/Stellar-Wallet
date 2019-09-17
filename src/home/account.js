@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {
     Text, View, FlatList, ActivityIndicator,
-    TouchableOpacity
+    TouchableOpacity, Alert
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -38,13 +38,17 @@ class Account extends Component {
   }
   
   async loadAccount(){
-    account = await Stellar.getAccount(this.props.publicKey)
-    store.dispatch({
-      type: "LOAD_ACCOUNT",
-      payload: {
-        account
-      }
-    })
+    try{
+      account = await Stellar.getAccount(this.props.publicKey)
+      store.dispatch({
+        type: "LOAD_ACCOUNT",
+        payload: {
+          account
+        }
+      })
+    } catch (error) {
+      Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
+    }
   }
 
   async componentDidMount(){

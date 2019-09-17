@@ -33,10 +33,15 @@ class ConfirmPayment extends Component{
   sendTransaction = async () => {
     let values = this.props.navigation.state.params.values
     this.setState({sendingTransaction: true})
-    let result = await Stellar.submitTransaction(this.props.publicKey, 
+    try {
+      var result = await Stellar.submitTransaction(this.props.publicKey, 
       values.recipient, values.amount, values.currency, 
       this.state.fee, this.props.secretKey,
       values.memo ? values.memo : null)
+    } catch (error) {
+      Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
+      this.setState({sendingTransaction: false})
+    }
     if (result){
       try{
         const transactionDetails = await fetch(result._links.transaction.href)
@@ -44,7 +49,7 @@ class ConfirmPayment extends Component{
         this.setState({sendingTransaction: false, dialogVisible: true,
           transactionResult: transactionResultData})
       } catch(error){
-        Alert.alert("Error","Transaction submitted successfully, but error loading details.")
+        Alert.alert("Error loading transaction details.","Transaction submitted successfully, but error loading details. Check your operations log to confirm.")
         console.log(error)
         this.setState({sendingTransaction: false})
         this.props.navigation.dispatch(StackActions.pop({
@@ -86,7 +91,6 @@ class ConfirmPayment extends Component{
             }
             >
             <Fragment>
-
               <Text>Your transaction was successfully submitted into the ledger #{this.state.transactionResult.ledger}.</Text>
               <View style={[{flexDirection: "row", justifyContent: "space-between"}]}>
                 <View style={{width:"80%"}}>

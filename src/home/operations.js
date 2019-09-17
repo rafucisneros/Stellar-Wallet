@@ -141,23 +141,27 @@ class Operations extends Component{
     this.state = {refreshing: false}
   }  
   async loadOperations(){
-    operations = await Stellar.getOperationsForAccount("GAJ6S2PB6BSGBH526EI34E7E2PBIE435MYURLDS6TW5NG5DVGZWOTOXN").then((data)=>data.records)
-    let operationsWithMemo = operations.map(async op=>{
-      return op.transaction()
-    })    
-    Promise.all(operationsWithMemo).then(data=>{
-      data.map(transaction=>{
-        if (transaction.memo) {
-          operations.find(operation=>operation.transaction_hash === transaction.hash).memo = transaction.memo    
-        }
+    try{
+      operations = await Stellar.getOperationsForAccount("GAJ6S2PB6BSGBH526EI34E7E2PBIE435MYURLDS6TW5NG5DVGZWOTOXN").then((data)=>data.records)
+      let operationsWithMemo = operations.map(async op=>{
+        return op.transaction()
+      })    
+      Promise.all(operationsWithMemo).then(data=>{
+        data.map(transaction=>{
+          if (transaction.memo) {
+            operations.find(operation=>operation.transaction_hash === transaction.hash).memo = transaction.memo    
+          }
+        })
+        store.dispatch({
+          type: "LOAD_OPERATIONS",
+          payload: {
+            operations: operations
+          }
+        })
       })
-      store.dispatch({
-        type: "LOAD_OPERATIONS",
-        payload: {
-          operations: operations
-        }
-      })
-    })
+    } catch (error) {
+      Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
+    }
   }
 
   async componentDidMount(){

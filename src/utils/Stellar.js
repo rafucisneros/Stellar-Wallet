@@ -22,7 +22,7 @@ class Stellar{
     } catch (error) {
       console.log("An error ocurred trying to load account.")
       console.log(error)  
-      return error    
+      throw error  
     }
   }
 
@@ -34,18 +34,7 @@ class Stellar{
     } catch (error) {
       console.log("An error ocurred trying to load operations.")
       console.log(error) 
-      return error 
-    }
-  }
-
-  static async getTransactionByHash(transactionHash){
-    try{
-      const transaction = await this.server.transactions().transaction(transactionHash).call()
-      return transaction
-    } catch (error) {
-      console.log("An error ocurred trying to load transaction by hash.");
-      console.log(error)
-      return error
+      throw error 
     }
   }
 
@@ -57,7 +46,7 @@ class Stellar{
     } catch (error){
       console.log("An error ocurred trying to check destination account existence.");
       console.log(error)
-      return error
+      throw error
     }
   }
 
@@ -114,7 +103,7 @@ class Stellar{
       console.error(error.response.data.detail);
       console.error(error.response.data.extras.result_codes);
       console.error(error.response.data.type);
-      return error
+      throw error
     }
   }
 }
