@@ -9,10 +9,14 @@ import Home from './home/home';
 import SetInflation from './setInflation/setInflation';
 import RemoveAccount from './removeAccount/removeAccount';
 import Trustlines from './trustlines/trustlines';
-import AddAccount from './addAccount/addAccount';
 import Contacts from './contacts/contacts';
 import About from './about/about';
 import ConfirmPayment from "./home/confirmPayment";
+import AddAccount from "./addAccount/addAccount";
+import CreateAccount from "./addAccount/createAccount";
+import ImportAccount from "./addAccount/importAccount";
+import GenerateSeed from "./addAccount/generateSeed";
+import SetPassword from "./addAccount/setPassword";
 
 const DrawerNavigator = createDrawerNavigator(
   {
@@ -86,6 +90,7 @@ const DrawerNavigator = createDrawerNavigator(
     }
   },
   {
+    initialRouteName: "Home",
     drawerWidth: 200,
     // contentComponent: CustomDrawerContentComponent, 
     drawerBackgroundColor: 'rgba(255,255,255,.9)',
@@ -114,10 +119,50 @@ const StackNavigator = createStackNavigator(
         },
         headerTintColor: "#fff"
       }
-    }
+    },
+    CreateAccount: {
+      screen: CreateAccount,
+      navigationOptions: {
+        title: "Create Account",
+        headerStyle: {
+          backgroundColor: '#2196F3'
+        },
+        headerTintColor: "#fff"
+      }
+    },
+    GenerateSeed: {
+      screen: GenerateSeed,
+      navigationOptions: {
+        title: "Generate Seed",
+        headerStyle: {
+          backgroundColor: '#2196F3'
+        },
+        headerTintColor: "#fff"
+      }
+    },
+    ImportAccount: {
+      screen: ImportAccount,
+      navigationOptions: {
+        title: "Import Account",
+        headerStyle: {
+          backgroundColor: '#2196F3'
+        },
+        headerTintColor: "#fff"
+      }
+    },
+    SetPassword: {
+      screen: SetPassword,
+      navigationOptions: {
+        title: "Set Password",
+        headerStyle: {
+          backgroundColor: '#2196F3'
+        },
+        headerTintColor: "#fff"
+      }
+    }    
   },
   {
-    initialRouteName: "DrawerHome"
+    initialRouteName: "CreateAccount"
   }
 );
 

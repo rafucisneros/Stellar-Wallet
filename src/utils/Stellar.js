@@ -106,6 +106,10 @@ class Stellar{
       throw error
     }
   }
+
+  static generateSeed(){
+    return Keypair.random()
+  }
 }
 
 export default Stellar

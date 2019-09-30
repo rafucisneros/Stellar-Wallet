@@ -1,51 +1,51 @@
-import React, { Component }  from 'react';
+import React, { Component }  from 'react'
 import { Text, View, TextInput, 
   Picker, Alert, TouchableOpacity, Clipboard,
   ActivityIndicator
-} from 'react-native';
+} from 'react-native'
 import Container from '../utils/Container'
-import Stellar from '../utils/Stellar';
+import Stellar from '../utils/Stellar'
 
 import { store } from '../redux/store'
-import { connect } from 'react-redux';
-import { Button } from 'react-native-paper';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
+import { connect } from 'react-redux'
+import { Button } from 'react-native-paper'
+import { Formik } from 'formik'
+import * as Yup from 'yup'
 
 import NavigationService from '../utils/NavigationService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import styles from '../utils/Styles';
+import styles from '../utils/Styles'
 
 class SendPayment extends Component{
   constructor(props){
     super(props)
-    currency = "native";
+    currency = "native"
     balance = this.props.account.balances.filter(
       ({asset_type})=> asset_type == currency
-    )[0].balance;
-    this.state = {currency, balance, refreshig: false};
+    )[0].balance
+    this.state = {currency, balance, refreshig: false}
   }
 
   submitPayment = async (values, formikActions) => {
     try{
-      accountExists = await Stellar.accountExists(values.recipient);
-      formikActions.setSubmitting(false);
-      NavigationService.navigate("ConfirmPayment", {values});
+      accountExists = await Stellar.accountExists(values.recipient)
+      formikActions.setSubmitting(false)
+      NavigationService.navigate("ConfirmPayment", {values})
 
     } catch (error){
       if (error.message == "Request failed with status code 404") {
-        formikActions.setSubmitting(false);    
+        formikActions.setSubmitting(false)   
         Alert.alert("Destination account not funded.",`The account provided is not created yet. 
         You need to make a "Create Account" operation in order to create it`)
       } else if (error.message == "Network Error"){
         Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
       } else {
-        formikActions.setSubmitting(false);    
+        formikActions.setSubmitting(false)   
         Alert.alert("Key Error", "The key provided is not a valid Stellar Key.")
       }
     } finally {
-      formikActions.setSubmitting(false);
+      formikActions.setSubmitting(false)
     }
   }
 
@@ -231,4 +231,4 @@ function mapStateToProps(state){
     publicKey: state.accountReducer.publicKey
   };
 }
-export default connect(mapStateToProps)(SendPayment);
+export default connect(mapStateToProps)(SendPayment)

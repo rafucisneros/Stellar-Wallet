@@ -1,30 +1,34 @@
-import React, { Fragment, Component }  from 'react';
-import { Text, View } from 'react-native';
+import React, { Component }  from 'react'
+import { Text, View, Button } from 'react-native'
+import NavigationService from '../utils/NavigationService'
+import styles from '../utils/Styles'
 
-import MenuTop from '../utils/MenuTop';
-import Container from '../utils/Container'
 
-import { connect } from 'react-redux';
 
 class AddAccount extends Component{
+
   render(){
     return (
-      <Fragment>
-        <MenuTop navigation={this.props.navigation}/>
-        <Container>
-          <View>
-            <Text>Add Account</Text>
-          </View>
-        </Container>
-      </Fragment>
+    <View style={styles.container}>
+      <View style={[styles.section, {flex:1, justifyContent: "space-around"}]}>
+        <View>
+          <Text style={styles.pageTitle}>Welcome!</Text>
+        </View>
+        <View style={{marginBottom:20}}>
+          <Button
+            title="Create new account"
+            onPress={()=>{NavigationService.navigate("CreateAccount")}}
+          />
+        </View>
+        <View>
+          <Button
+            title="Import exisiting account"
+            onPress={()=>{NavigationService.navigate("ImportAccount")}}
+          />
+        </View>            
+      </View>
+    </View>
     )
   }
 }
-
-function mapStateToProps(state){
-  return {
-    account: state.account,
-    accountId: state.accountId
-  };
-}
-export default connect(mapStateToProps)(AddAccount);
+export default AddAccount

@@ -71,6 +71,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'red',
     fontWeight: 'bold',
+  },
+  // SetPassword CreateAccount
+  warning: {
+    fontSize: 20,
+    color: "red"
+  },
+  pageTitle:{
+    fontWeight: "bold",
+    fontSize: 50,
+    textAlign: "center"
+  },
+  // Container without scroll
+  container: {
+    flex:1, 
+    margin: 15
   }
 })
 export default styles;
