@@ -110,6 +110,10 @@ class Stellar{
   static generateSeed(){
     return Keypair.random()
   }
+
+  static getPublicKeyFromSeed(seed){
+    return Keypair.fromSecret(seed).publicKey()
+  }
 }
 
 export default Stellar

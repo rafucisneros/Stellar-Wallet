@@ -5,6 +5,10 @@ import { Text, View, TextInput, TouchableOpacity,
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import styles from '../utils/Styles'
 import Encryption from '../utils/Encryption'
+import Stellar from '../utils/Stellar'
+import { store } from '../redux/store'
+import NavigationService from '../utils/NavigationService';
+import { NavigationActions } from 'react-navigation';
 
 class SetPassword extends Component{
   constructor(props){
@@ -21,8 +25,26 @@ class SetPassword extends Component{
       Alert.alert("Passwords don't match!", "Type the same password provided in the first input on the confirm password input.")
     } else {
       try{
-        encryptionResult = await Encryption.encryptText(this.props.navigation.state.params.seed, this.password)
-        console.log(encryptionResult)
+        let secretKey = await Encryption.encryptText(this.props.navigation.state.params.seed, this.password)
+        let publicKey = Stellar.getPublicKeyFromSeed(this.props.navigation.state.params.seed)
+        store.dispatch({
+          type: "SET_KEYS",
+          payload: {
+            publicKey,
+            secretKey
+          }
+        })
+        let goToAccountIdentification = NavigationActions.navigate({
+          routeName: "AccountIdentification",
+          params: {},
+          action: {}
+        })
+        let goToHome = NavigationActions.navigate({ 
+                                          routeName: "Home",  
+                                          params: {}, 
+                                          action: goToAccountIdentification
+                                        })
+        NavigationService.navigate("DrawerHome", {}, goToHome)
       } catch (error) {
         console.log(error) 
         Alert.alert("Error encrypting", "An error ocurred encrypting your seed. Try again.")

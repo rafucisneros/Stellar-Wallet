@@ -10,6 +10,10 @@ function accountReducer(state = {}, action){
     case ("LOAD_OPERATIONS"): {
       return {... state, ...action.payload};
     }
+    case ("SET_KEYS"): {
+      // Leave only the new keys at the store
+      return {...action.payload};
+    }
     default:
       return state;
   }

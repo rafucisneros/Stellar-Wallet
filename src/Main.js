@@ -15,7 +15,6 @@ import ConfirmPayment from "./home/confirmPayment";
 import AddAccount from "./addAccount/addAccount";
 import CreateAccount from "./addAccount/createAccount";
 import ImportAccount from "./addAccount/importAccount";
-import GenerateSeed from "./addAccount/generateSeed";
 import SetPassword from "./addAccount/setPassword";
 
 const DrawerNavigator = createDrawerNavigator(
@@ -130,16 +129,6 @@ const StackNavigator = createStackNavigator(
         headerTintColor: "#fff"
       }
     },
-    GenerateSeed: {
-      screen: GenerateSeed,
-      navigationOptions: {
-        title: "Generate Seed",
-        headerStyle: {
-          backgroundColor: '#2196F3'
-        },
-        headerTintColor: "#fff"
-      }
-    },
     ImportAccount: {
       screen: ImportAccount,
       navigationOptions: {
@@ -162,7 +151,7 @@ const StackNavigator = createStackNavigator(
     }    
   },
   {
-    initialRouteName: "CreateAccount"
+    initialRouteName: "DrawerHome"
   }
 );
 

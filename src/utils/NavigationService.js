@@ -6,11 +6,12 @@ function setTopLevelNavigator(navigatorRef) {
   _navigator = navigatorRef;
 }
 
-function navigate(routeName, params = {}) {
+function navigate(routeName, params = {}, action = {}) {
   _navigator.dispatch(
     NavigationActions.navigate({
       routeName,
       params,
+      action
     })
   );
 }
