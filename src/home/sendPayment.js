@@ -5,6 +5,7 @@ import { Text, View, TextInput,
 } from 'react-native'
 import Container from '../utils/Container'
 import Stellar from '../utils/Stellar'
+import AccountNotFunded from '../utils/AccountNotFunded'
 
 import { store } from '../redux/store'
 import { connect } from 'react-redux'
@@ -21,10 +22,12 @@ class SendPayment extends Component{
   constructor(props){
     super(props)
     currency = "native"
-    balance = this.props.account.balances.filter(
-      ({asset_type})=> asset_type == currency
-    )[0].balance
-    this.state = {currency, balance, refreshig: false}
+    if(this.props.account){
+      balance = this.props.account.balances.filter(
+        ({asset_type})=> asset_type == currency
+      )[0].balance
+      this.state = {currency, balance, refreshig: false}
+    }
   }
 
   submitPayment = async (values, formikActions) => {
@@ -36,8 +39,7 @@ class SendPayment extends Component{
     } catch (error){
       if (error.message == "Request failed with status code 404") {
         formikActions.setSubmitting(false)   
-        Alert.alert("Destination account not funded.",`The account provided is not created yet. 
-        You need to make a "Create Account" operation in order to create it`)
+        Alert.alert("Destination account not funded.",`The account provided is not created yet. You need to make a "Create Account" operation in order to create it`)
       } else if (error.message == "Network Error"){
         Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
       } else {
@@ -63,8 +65,12 @@ class SendPayment extends Component{
         ({asset_type})=> asset_type == currency
       )[0].balance;
       this.setState({balance})
-    } catch (error){
-      Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
+    } catch (error) {
+      if (error.message == "Request failed with status code 404") { 
+        Alert.alert("This account is not funded yet.",`The account provided is not created yet. You need to receive at least 1 XLM in a "Create Account" operation in order to fund your account.`)
+      } else {
+        Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
+      }
     } finally {
       this.setState({refreshing: false})
     }
@@ -215,6 +221,12 @@ class SendPayment extends Component{
           </View>
         </Container>
       )
+    } else if (!this.props.accountFunded) {
+      return (
+        <Container>
+          <AccountNotFunded />
+        </Container>
+      )
     }
     return (
       <Container>
@@ -228,7 +240,8 @@ class SendPayment extends Component{
 function mapStateToProps(state){
   return {
     account: state.accountReducer.account,
-    publicKey: state.accountReducer.publicKey
+    publicKey: state.accountReducer.publicKey,
+    accountFunded: state.accountReducer.accountFunded
   };
 }
 export default connect(mapStateToProps)(SendPayment)

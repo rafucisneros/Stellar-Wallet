@@ -25,29 +25,61 @@ class SetPassword extends Component{
       Alert.alert("Passwords don't match!", "Type the same password provided in the first input on the confirm password input.")
     } else {
       try{
-        let secretKey = await Encryption.encryptText(this.props.navigation.state.params.seed, this.password)
-        let publicKey = Stellar.getPublicKeyFromSeed(this.props.navigation.state.params.seed)
-        store.dispatch({
-          type: "SET_KEYS",
-          payload: {
-            publicKey,
-            secretKey
-          }
-        })
-        let goToAccountIdentification = NavigationActions.navigate({
-          routeName: "AccountIdentification",
-          params: {},
-          action: {}
-        })
-        let goToHome = NavigationActions.navigate({ 
-                                          routeName: "Home",  
-                                          params: {}, 
-                                          action: goToAccountIdentification
-                                        })
-        NavigationService.navigate("DrawerHome", {}, goToHome)
+        var secretKey = await Encryption.encryptText(this.props.navigation.state.params.seed, this.password)
       } catch (error) {
         console.log(error) 
         Alert.alert("Error encrypting", "An error ocurred encrypting your seed. Try again.")
+      }
+      if (secretKey){
+        try{
+          var publicKey = Stellar.getPublicKeyFromSeed(this.props.navigation.state.params.seed)
+          accountExists = await Stellar.accountExists(publicKey)
+          store.dispatch({
+            type: "SET_KEYS",
+            payload: {
+              publicKey,
+              secretKey,
+              accountFunded: true
+            }
+          })
+          let goToAccountIdentification = NavigationActions.navigate({
+            routeName: "AccountIdentification",
+            params: {},
+            action: {}
+          })
+          let goToHome = NavigationActions.navigate({ 
+                                            routeName: "Home",  
+                                            params: {}, 
+                                            action: goToAccountIdentification
+                                          })
+          NavigationService.navigate("DrawerHome", {}, goToHome)          
+        } catch(error) {
+          console.log(error)
+          if (error.message == "Request failed with status code 404") { 
+            Alert.alert("This account is not funded yet.",`The account provided is not created yet. You need to receive at least 1 XLM in a "Create Account" operation in order to fund your account.`)
+            store.dispatch({
+              type: "SET_KEYS",
+              payload: {
+                publicKey,
+                secretKey,
+                accountFunded: false
+              }
+            })
+            let goToAccountIdentification = NavigationActions.navigate({
+              routeName: "AccountIdentification",
+              params: {},
+              action: {}
+            })
+            let goToHome = NavigationActions.navigate({ 
+                                              routeName: "Home",  
+                                              params: {}, 
+                                              action: goToAccountIdentification
+                                            })
+            NavigationService.navigate("DrawerHome", {}, goToHome)
+          } else {
+            Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
+          }
+        }
       }
     }
   }

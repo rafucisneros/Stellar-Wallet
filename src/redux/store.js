@@ -12,6 +12,7 @@ function accountReducer(state = {}, action){
     }
     case ("SET_KEYS"): {
       // Leave only the new keys at the store
+      console.log(state)
       return {...action.payload};
     }
     default:
@@ -38,7 +39,8 @@ const store =
     accountReducer: {
       // account: {
         publicKey: "GAJ6S2PB6BSGBH526EI34E7E2PBIE435MYURLDS6TW5NG5DVGZWOTOXN",
-        secretKey: "SABAPCGBLUHAFXBRA3L4HAZFYMNB632OWVJ3G6BPLXJTPQAXWPJ35CD5"
+        secretKey: "SABAPCGBLUHAFXBRA3L4HAZFYMNB632OWVJ3G6BPLXJTPQAXWPJ35CD5",
+        accountFunded: true
       // }
     }
   } // test network

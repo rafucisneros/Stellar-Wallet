@@ -9,6 +9,7 @@ import Separators from '../utils/Separators'
 import Stellar from '../utils/Stellar'
 import styles from '../utils/Styles'
 import Container from '../utils/Container'
+import AccountNotFunded from '../utils/AccountNotFunded'
 
 import { connect } from 'react-redux'
 import { store } from '../redux/store'
@@ -47,7 +48,11 @@ class Account extends Component {
         }
       })
     } catch (error) {
-      Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
+      if (error.message == "Request failed with status code 404") { 
+        Alert.alert("This account is not funded yet.",`The account provided is not created yet. You need to receive at least 1 XLM in a "Create Account" operation in order to fund your account.`)
+      } else {
+        Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
+      }
     }
   }
 
@@ -68,7 +73,7 @@ class Account extends Component {
   }
 
   render() {
-    if (this.props.account){
+    if (this.props.account && this.props.accountFunded){
       return (
         <Container refreshing={ this.state.refreshing } onRefresh={ this.refreshPage }>
           <View style={styles.section}>
@@ -101,6 +106,12 @@ class Account extends Component {
           </View>
         </Container>
       );
+    } else if (!this.props.accountFunded) {
+      return (
+        <Container>
+          <AccountNotFunded />
+        </Container>
+      )
     }
     return (
       <Container>
@@ -114,7 +125,8 @@ class Account extends Component {
 function mapStateToProps(state){
   return {
     account: state.accountReducer.account,
-    publicKey: state.accountReducer.publicKey
+    publicKey: state.accountReducer.publicKey,
+    accountFunded: state.accountReducer.accountFunded
   }
 }
 export default connect(mapStateToProps)(Account)
