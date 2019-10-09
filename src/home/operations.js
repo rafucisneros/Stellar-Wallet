@@ -143,7 +143,7 @@ class Operations extends Component{
   }  
   async loadOperations(){
     try{
-      operations = await Stellar.getOperationsForAccount("GAJ6S2PB6BSGBH526EI34E7E2PBIE435MYURLDS6TW5NG5DVGZWOTOXN").then((data)=>data.records)
+      operations = await Stellar.getOperationsForAccount(this.props.publicKey).then((data)=>data.records)
       let operationsWithMemo = operations.map(async op=>{
         return op.transaction()
       })    
@@ -156,7 +156,7 @@ class Operations extends Component{
         store.dispatch({
           type: "LOAD_OPERATIONS",
           payload: {
-            operations: operations
+            operations
           }
         })
       })

@@ -9,6 +9,7 @@ import { TextInput } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Button } from 'react-native-paper'
 import Stellar from '../utils/Stellar'
+import Encryption from '../utils/Encryption'
 import NavigationService from '../utils/NavigationService'
 import { MaterialDialog } from 'react-native-material-dialog'
 
@@ -22,7 +23,7 @@ class ConfirmPayment extends Component{
       dialogVisible: false,
       transactionResult: false
     }  
-    this.props.password = "";
+    this.password = "";
   }
   
   async componentDidMount(){
@@ -33,13 +34,25 @@ class ConfirmPayment extends Component{
   sendTransaction = async () => {
     let values = this.props.navigation.state.params.values
     this.setState({sendingTransaction: true})
+    let secretKey
     try {
-      var result = await Stellar.submitTransaction(this.props.publicKey, 
-      values.recipient, values.amount, values.currency, 
-      this.state.fee, this.props.secretKey,
-      values.memo ? values.memo : null)
+      secretKey = Encryption.decryptText(this.props.secretKey, this.password)
     } catch (error) {
-      Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
+      secretKey = false
+    }
+
+    if (secretKey) {
+      try {
+        var result = await Stellar.submitTransaction(this.props.publicKey, 
+        values.recipient, values.amount, values.currency, 
+        this.state.fee, secretKey,
+        values.memo ? values.memo : null)
+      } catch (error) {
+        Alert.alert("Network issue detected.", "We couldn't reach the server. Check your internet connection.")
+        this.setState({sendingTransaction: false})      
+      }
+    } else {
+      Alert.alert("Wrong Password.", "Please, try again.")
       this.setState({sendingTransaction: false})
     }
     if (result){
@@ -50,7 +63,6 @@ class ConfirmPayment extends Component{
           transactionResult: transactionResultData})
       } catch(error){
         Alert.alert("Error loading transaction details.","Transaction submitted successfully, but error loading details. Check your operations log to confirm.")
-        console.log(error)
         this.setState({sendingTransaction: false})
         this.props.navigation.dispatch(StackActions.pop({
           n: 1,

@@ -151,7 +151,7 @@ const StackNavigator = createStackNavigator(
     }    
   },
   {
-    initialRouteName: "DrawerHome"
+    initialRouteName: "CreateAccount"
   }
 );
 

@@ -8,11 +8,10 @@ function accountReducer(state = {}, action){
       return {... state, ...action.payload};
     }
     case ("LOAD_OPERATIONS"): {
-      return {... state, ...action.payload};
+      return {... state, operations: action.payload.operations};
     }
     case ("SET_KEYS"): {
       // Leave only the new keys at the store
-      console.log(state)
       return {...action.payload};
     }
     default:
@@ -35,16 +34,10 @@ const reducer = combineReducers({
 const persistedReducer = persistReducer(persistCongif, reducer);
 
 const store = 
-  createStore(persistedReducer, {
-    accountReducer: {
-      // account: {
-        publicKey: "GAJ6S2PB6BSGBH526EI34E7E2PBIE435MYURLDS6TW5NG5DVGZWOTOXN",
-        secretKey: "SABAPCGBLUHAFXBRA3L4HAZFYMNB632OWVJ3G6BPLXJTPQAXWPJ35CD5",
-        accountFunded: true
-      // }
+  createStore(
+    persistedReducer, {
+      accountReducer: {}
     }
-  } // test network
-    // {accountReducer: {accountId: "GDIST7XTJR3QZ2B7QZTBI3SKFR4JP6RFQTDUOKCFEMGVLHLYRAPLYMDN"}}     // real network
   );
   const persistor = persistStore(store);
 

@@ -1,7 +1,8 @@
 import React, { Fragment, Component }  from 'react'
 import { Text, View, TextInput, TouchableOpacity,
-  Button, Alert
+  Alert
 } from 'react-native'
+import { Button } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import styles from '../utils/Styles'
 import Encryption from '../utils/Encryption'
@@ -13,21 +14,24 @@ import { NavigationActions } from 'react-navigation';
 class SetPassword extends Component{
   constructor(props){
     super(props)
-    this.state = {showPassword: false}
+    this.state = {
+      showPassword: false,
+      encrypting: false
+    }
     this.password = ""
     this.confirmPassword = ""
   }
 
   encrypt = async () => {
+    this.setState({encrypting: true})
     if (this.password.length < 8){
       Alert.alert("Password too short!", "Password must be 8 to 20 characters long.")
     } else if (this.password != this.confirmPassword){
       Alert.alert("Passwords don't match!", "Type the same password provided in the first input on the confirm password input.")
     } else {
       try{
-        var secretKey = await Encryption.encryptText(this.props.navigation.state.params.seed, this.password)
+        var secretKey = Encryption.encryptText(this.props.navigation.state.params.seed, this.password)
       } catch (error) {
-        console.log(error) 
         Alert.alert("Error encrypting", "An error ocurred encrypting your seed. Try again.")
       }
       if (secretKey){
@@ -54,7 +58,6 @@ class SetPassword extends Component{
                                           })
           NavigationService.navigate("DrawerHome", {}, goToHome)          
         } catch(error) {
-          console.log(error)
           if (error.message == "Request failed with status code 404") { 
             Alert.alert("This account is not funded yet.",`The account provided is not created yet. You need to receive at least 1 XLM in a "Create Account" operation in order to fund your account.`)
             store.dispatch({
@@ -82,6 +85,7 @@ class SetPassword extends Component{
         }
       }
     }
+    this.setState({encrypting: false})
   }
 
   render(){
@@ -128,9 +132,14 @@ class SetPassword extends Component{
             </View>
             <View style={{marginBottom:20}}>
               <Button
-                title="Finish"
-                onPress={this.encrypt}
-              />
+                onPress={ this.encrypt }
+                color="#0097A7"
+                mode="contained"
+                loading={this.state.encrypting}
+                disabled={this.state.encrypting}
+                style={{ marginTop: 16 }}>  
+                Finish
+              </Button>
             </View>
           </View>
         </View>
