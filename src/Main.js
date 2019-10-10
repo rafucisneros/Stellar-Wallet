@@ -1,9 +1,9 @@
-import React from 'react';
-import { createAppContainer } from "react-navigation";
+import React, {Component} from 'react';
+import { createAppContainer, StackActions, NavigationActions } from "react-navigation";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { createStackNavigator } from "react-navigation-stack";
-
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { connect } from 'react-redux'
 
 import Home from './home/home';
 import SetInflation from './setInflation/setInflation';
@@ -16,6 +16,7 @@ import AddAccount from "./addAccount/addAccount";
 import CreateAccount from "./addAccount/createAccount";
 import ImportAccount from "./addAccount/importAccount";
 import SetPassword from "./addAccount/setPassword";
+import LoadingState from './utils/LoadingState'
 
 const DrawerNavigator = createDrawerNavigator(
   {
@@ -101,8 +102,45 @@ const DrawerNavigator = createDrawerNavigator(
   }
 );
 
+class LoadingSwitch extends Component {
+  componentDidMount(){
+    if (this.props.secretKey && this.props.publicKey){
+      const goHome = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({routeName: "DrawerHome"})]
+      })
+      this.props.navigation.dispatch(goHome)
+    } else {
+      const goCreateAccount = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({routeName: "CreateAccount"})]
+      })
+      this.props.navigation.dispatch(goCreateAccount)
+    }
+  }
+
+  render(){
+    return <LoadingState />
+  }
+}
+
+function mapStateToProps(state){
+  return {
+    secretKey: state.accountReducer.secretKey,
+    publicKey: state.accountReducer.publicKey,
+    accountFunded: state.accountReducer.accountFunded
+  }
+}
+
+
 const StackNavigator = createStackNavigator(
   {
+    LoadingSwitch: {
+      screen: connect(mapStateToProps)(LoadingSwitch),
+      navigationOptions:{
+        header: null
+      }
+    },
     DrawerHome: {
       screen: DrawerNavigator,
       navigationOptions: {
@@ -151,7 +189,7 @@ const StackNavigator = createStackNavigator(
     }    
   },
   {
-    initialRouteName: "CreateAccount"
+    initialRouteName: "LoadingSwitch"
   }
 );
 

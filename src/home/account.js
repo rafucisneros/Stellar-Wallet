@@ -73,7 +73,6 @@ class Account extends Component {
   }
 
   render() {
-    debugger
     if (this.props.account && this.props.accountFunded){
       return (
         <Container refreshing={ this.state.refreshing } onRefresh={ this.refreshPage }>
