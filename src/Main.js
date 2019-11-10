@@ -113,7 +113,7 @@ class LoadingSwitch extends Component {
     } else {
       const goCreateAccount = StackActions.reset({
         index: 0,
-        actions: [NavigationActions.navigate({routeName: "CreateAccount"})]
+        actions: [NavigationActions.navigate({routeName: "AddAccount"})]
       })
       this.props.navigation.dispatch(goCreateAccount)
     }
@@ -144,6 +144,12 @@ const StackNavigator = createStackNavigator(
     DrawerHome: {
       screen: DrawerNavigator,
       navigationOptions: {
+        header: null
+      }
+    },
+    AddAccount: {
+      screen: AddAccount,
+      navigationOptions:{
         header: null
       }
     },
