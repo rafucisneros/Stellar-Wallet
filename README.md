@@ -5,8 +5,7 @@ Mobile wallet built with React Native for cryptocurrencies on the Stellar networ
 Approximately 60% done. Currently on stand by.
 
 # Screenshots
-<img src="screenshots/welcome.png" width="250">
-<img src="screenshots/createAccount.png" width="250">
+<img src="screenshots/welcome.png" width="250"> <img src="screenshots/createAccount.png" width="250">
 <img src="screenshots/generateSeed.png" width="250">
 <img src="screenshots/copyGeneratedSeed.png" width="250">
 <img src="screenshots/setPassword.png" width="250">
