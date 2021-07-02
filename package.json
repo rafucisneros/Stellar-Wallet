@@ -36,7 +36,7 @@
     "redux": "^4.0.4",
     "redux-form": "^8.2.6",
     "redux-persist": "^5.10.0",
-    "stellar-sdk": "^3.0.0",
+    "stellar-sdk": "^8.2.3",
     "stream-browserify": "1.0.0",
     "url": "~0.10.1",
     "util": "~0.10.3",
